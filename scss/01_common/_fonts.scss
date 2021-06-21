@@ -22,37 +22,45 @@
  */
 
 @font-face {
-    font-family: 'Spoqa Han Sans';
-    font-weight: 700;
-    font-display: swap;
-    src: local('Spoqa Han Sans Bold'),
+  font-family: 'Spoqa Han Sans';
+  font-weight: 700;
+  font-display: swap;
+  src: local('Spoqa Han Sans Bold'),
     url('../fonts/SpoqaHanSansBold.woff2') format('woff2'),
-    url('../fonts/SpoqaHanSans/SpoqaHanSansBold.woff') format('woff'),
+    url('../fonts/SpoqaHanSans/SpoqaHanSansBold.woff') format('woff');
 }
 
 @font-face {
-    font-family: 'Spoqa Han Sans';
-    font-weight: 400;
-    font-display: swap;
-    src: local('Spoqa Han Sans Regular'),
+  font-family: 'Spoqa Han Sans';
+  font-weight: 400;
+  font-display: swap;
+  src: local('Spoqa Han Sans Regular'),
     url('../fonts/SpoqaHanSansRegular.woff2') format('woff2'),
-    url('../fonts/SpoqaHanSansRegular.woff') format('woff'),
+    url('../fonts/SpoqaHanSansRegular.woff') format('woff');
 }
 
 @font-face {
-    font-family: 'Spoqa Han Sans';
-    font-weight: 300;
-    font-display: swap;
-    src: local('Spoqa Han Sans Light'),
+  font-family: 'Spoqa Han Sans';
+  font-weight: 300;
+  font-display: swap;
+  src: local('Spoqa Han Sans Light'),
     url('../fonts/SpoqaHanSansLight.woff2') format('woff2'),
-    url('../fonts/SpoqaHanSansLight.woff') format('woff'),
+    url('../fonts/SpoqaHanSansLight.woff') format('woff');
 }
 
 @font-face {
-    font-family: 'Spoqa Han Sans';
-    font-weight: 100;
-    font-display: swap;
-    src: local('Spoqa Han Sans Thin'),
+  font-family: 'Spoqa Han Sans';
+  font-weight: 100;
+  font-display: swap;
+  src: local('Spoqa Han Sans Thin'),
     url('../fonts/SpoqaHanSansThin.woff2') format('woff2'),
-    url('../fonts/SpoqaHanSansThin.woff') format('woff'),
+    url('../fonts/SpoqaHanSansThin.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'yg-jalnan';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff')
+    format('woff');
+  font-weight: normal;
+  font-style: normal;
 }
