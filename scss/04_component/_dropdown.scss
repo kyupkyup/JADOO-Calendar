@@ -1,23 +1,22 @@
 .dropdown {
   position: relative;
   z-index: 1;
-  width: 100px;
-  margin-bottom: 8px;
+  width: 220px;
+  margin: 0 auto 8px;
 }
 
 .dropdown-toggle {
+  padding: 0 40px 0 16px;
   width: 100%;
   height: 50px;
-  padding: 0 16px;
-  line-height: 50px;
-  color: rgba(133, 136, 150, 0.5);
-  text-align: left;
-  border: 1px solid rgba(224, 226, 231, 0.75);
+  background: url('../../img/down.png') no-repeat 190px center/16px;
   border-radius: 6px;
-  transition: border-color 100ms ease-in;
+  border: 1px solid $transGray;
+  line-height: 49px;
+  text-align: left;
 }
 
-.dropdown-toggle.selected {
+.dropdown-toggle.--selected {
   color: #3f4150;
   border-color: rgba(224, 226, 231, 1);
 }
@@ -27,35 +26,64 @@
 }
 
 .dropdown-menu {
+  overflow: hidden;
+  visibility: hidden;
   position: absolute;
   z-index: 2;
   top: calc(100% + 4px);
   left: 0;
   width: 100%;
   max-height: 0;
-  overflow: hidden;
-  background-color: #fff;
+  background: $white;
   border: 1px solid transparent;
   border-radius: 6px;
   transition: border-color 200ms ease-in, padding 200ms ease-in,
     max-height 200ms ease-in, box-shadow 200ms ease-in;
 }
 
-.dropdown-menu.show {
+.dropdown-menu.--show {
+  visibility: visible;
   padding: 8px 0;
   max-height: 280px;
-  border-color: rgba(224, 226, 231, 0.5);
-  box-shadow: 0 4px 9px 0 rgba(63, 65, 80, 0.1);
+  border-color: $transGray2;
+  box-shadow: $boxShadow;
 }
 
 .dropdown-option {
-  width: 100%;
+  margin: 0 2px;
+  width: calc(100% - 4px);
   height: 44px;
   padding: 0 16px;
   line-height: 44px;
-  text-align: left;
+  text-align: inherit;
+  font-weight: 400;
 }
 
 .dropdown-option:hover {
-  background-color: #f8f9fa;
+  background-color: $lightGray;
+}
+
+.dropdown-calendar {
+  position: absolute;
+  top: 56px;
+  left: 20px;
+  z-index: 5;
+
+  & .dropdown-menu {
+    display: flex;
+  }
+
+  & .dropdown-year,
+  & .dropdown-month {
+    width: 48%;
+    text-align: center;
+  }
+}
+
+.selected-year,
+.selected-month {
+  display: inline-block;
+  width: 48%;
+  text-align: center;
+  font-size: 1.1rem;
 }

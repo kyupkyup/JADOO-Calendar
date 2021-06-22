@@ -10,21 +10,87 @@
   <body>
     <h1 class="a11y-hidden">자두캘린더</h1>
     <nav class="navigation">
-      <h2 class="current-nav">2021. 07.</h2>
-      <button class="move-month-btn">년월선택</button>
-      <button class="move-today-btn">오늘</button>
+      <h2 class="nav-current">2021. 07.</h2>
+      <div class="nav-move">
+        <button id="dropdownCalendarLabel" class="move-calendar-btn">
+          년월선택
+        </button>
+        <div class="dropdown dropdown-calendar">
+          <button
+            type="button"
+            id="dropdownCalendarBtn"
+            class="dropdown-toggle"
+            aria-labelledby="dropdownCalendarLabel dropdownCalendarBtn"
+            aria-haspopup="listbox"
+          >
+            <span class="selected-year">2021</span>
+            <span class="selected-month">07</span>
+          </button>
+          <div class="dropdown-menu">
+            <ul
+              class="dropdown-year"
+              tabindex="-1"
+              role="listbox"
+              aria-labelledby="dropdownCalendarLabel"
+            >
+              <li class="dropdown-item" role="option">
+                <button type="button" class="dropdown-option">2018</button>
+              </li>
+              <li class="dropdown-item" role="option">
+                <button type="button" class="dropdown-option">2019</button>
+              </li>
+              <li class="dropdown-item" role="option">
+                <button type="button" class="dropdown-option">2020</button>
+              </li>
+            </ul>
+            <ul
+              class="dropdown-month"
+              tabindex="-1"
+              role="listbox"
+              aria-labelledby="dropdownMonthLabel"
+            >
+              <li class="dropdown-item" role="option">
+                <button type="button" class="dropdown-option">05</button>
+              </li>
+              <li class="dropdown-item" role="option">
+                <button type="button" class="dropdown-option">06</button>
+              </li>
+              <li class="dropdown-item" role="option">
+                <button type="button" class="dropdown-option">07</button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <button class="move-today-btn">오늘</button>
+      </div>
       <div class="dropdown dropdown-category">
-        <button type="button" class="dropdown-toggle">✔ TODO</button>
-        <ul class="dropdown-menu">
-          <li class="dropdown-item">
+        <span id="dropdownCategoryLabel" class="a11y-hidden"
+          >카테고리 선택</span
+        >
+        <button
+          type="button"
+          id="dropdownCategoryBtn"
+          class="dropdown-toggle"
+          aria-labelledby="dropdownCategoryLabel dropdownCategoryBtn"
+          aria-haspopup="listbox"
+        >
+          ✔ TODO
+        </button>
+        <ul
+          class="dropdown-menu"
+          tabindex="-1"
+          role="listbox"
+          aria-labelledby="dropdownCategoryLabel"
+        >
+          <li class="dropdown-item" role="option">
             <button type="button" class="dropdown-option">✔ TODO</button>
           </li>
-          <li class="dropdown-item">
+          <li class="dropdown-item" role="option">
             <button type="button" class="dropdown-option">
               ✍ 패캠 네카라쿠배
             </button>
           </li>
-          <li class="dropdown-item">
+          <li class="dropdown-item" role="option">
             <button type="button" class="dropdown-option">🙏 감사일기</button>
           </li>
         </ul>
@@ -37,13 +103,13 @@
         <div class="calendar-day">wed</div>
         <div class="calendar-day">thu</div>
         <div class="calendar-day">fri</div>
-        <div class="calendar-day --sat">sat</div>
-        <div class="calendar-day --sun">sun</div>
+        <div class="calendar-day">sat</div>
+        <div class="calendar-day">sun</div>
       </div>
       <div class="calendar-dates">
         <div class="calendar-date">
           <span class="calendar-date-txt">30</span>
-          <button class="item-add-btn">
+          <button class="item-add-btn" aria-label="6월 30일 월요일 아이템추가">
             <span class="icon icon-add"></span>
           </button>
           <ul class="items">
@@ -58,10 +124,10 @@
                 todo리스트 내용 가나다라마바사 아자차카타ㅠㅏ하 내용
               </label>
               <div class="item-util">
-                <button class="item-edit-btn">
+                <button class="item-edit-btn" aria-label="아이템편집">
                   <span class="icon icon-edit"></span>
                 </button>
-                <button class="item-delete-btn">
+                <button class="item-delete-btn" aria-label="아이템삭제">
                   <span class="icon icon-delete"></span>
                 </button>
               </div>

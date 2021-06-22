@@ -70,4 +70,12 @@
 .calendar-date {
   border-bottom: 1px solid $gray;
   border-left: 1px solid $gray;
+
+  &:nth-child(7n-1) {
+    color: $calendarBlue;
+  }
+
+  &:nth-child(7n) {
+    color: $calendarRed;
+  }
 }
