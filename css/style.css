@@ -673,29 +673,6 @@ button {
   background-color: #f8f9fa;
 }
 
-:root {
-  --scroll-width: 10px;
-}
-
-body {
-  overflow-y: hidden;
-}
-
-.navigation {
-  float: right;
-  width: 260px;
-}
-@media screen and (max-width: 1440px) {
-  .navigation {
-    background-color: #fcf;
-  }
-}
-
-.current-nav {
-  font-family: "yg-jalnan";
-  font-size: 2.8rem;
-}
-
 .calendar {
   max-height: 100vh;
   overflow-y: auto;
@@ -824,6 +801,44 @@ body {
 .item-todo-txt {
   display: block;
   padding-left: 34px;
+}
+
+.item-post-txt {
+  position: relative;
+  padding-left: 34px;
+}
+.item-post-txt::before {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  content: "";
+  width: 10px;
+  height: 10px;
+  background: #f1c1d3;
+  border-radius: 5px;
+}
+
+:root {
+  --scroll-width: 10px;
+}
+
+body {
+  overflow-y: hidden;
+}
+
+.navigation {
+  float: right;
+  width: 260px;
+}
+@media screen and (max-width: 1440px) {
+  .navigation {
+    background-color: #fcf;
+  }
+}
+
+.current-nav {
+  font-family: "yg-jalnan";
+  font-size: 2.8rem;
 }
 
 /*# sourceMappingURL=style.css.map */
