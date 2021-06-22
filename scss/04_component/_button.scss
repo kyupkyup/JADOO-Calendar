@@ -1,0 +1,14 @@
+.move-calendar-btn,
+.move-today-btn {
+  margin: 0 3px;
+  width: 106px;
+  height: 44px;
+  line-height: 43px;
+  border-radius: 26px;
+  border: 1px solid $primaryPink;
+  color: $primaryPlum;
+
+  &:hover {
+    background: $primaryTransPink;
+  }
+}

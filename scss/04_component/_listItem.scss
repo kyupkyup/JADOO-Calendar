@@ -1,0 +1,87 @@
+.item {
+  position: relative;
+  padding: 6px 12px;
+  min-height: 40px;
+  line-height: 1.4;
+
+  &:hover {
+    background: $primaryTransPink;
+  }
+
+  &:hover .item-todo-txt {
+    opacity: 0.3;
+  }
+
+  &:hover .item-util {
+    opacity: 1;
+  }
+
+  &-add-btn {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+  }
+
+  &-util {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.item-todo {
+  &-chkbox {
+    opacity: 0;
+    position: absolute;
+    top: 6px;
+    left: 12px;
+    width: 26px;
+    height: 26px;
+    z-index: 4;
+  }
+
+  &-chkicon {
+    position: absolute;
+    top: 6px;
+    left: 12px;
+    width: 26px;
+    height: 26px;
+    background-image: url(../img/unchecked2.png);
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-size: 100% 100%;
+  }
+
+  &-chkbox:checked + .item-todo-chkicon {
+    background-image: url(../img/checked.png);
+  }
+
+  &-txt {
+    display: block;
+    padding-left: 34px;
+  }
+}
+
+.item-post {
+  &-txt {
+    position: relative;
+    padding-left: 34px;
+  }
+
+  &-txt::before {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: $primaryLightPink;
+    border-radius: 5px;
+  }
+}
