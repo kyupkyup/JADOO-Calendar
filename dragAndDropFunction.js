@@ -8,26 +8,48 @@ $calendarDates.addEventListener('mousedown', mousedownEvent => {
     mousedownEvent.target.parentNode.parentNode.parentNode.classList.add(
       'dragging'
     );
+
+    let afterElement = null;
+    let draggable = null;
+    let $container = null;
+    let prevAfterElemnt = null;
+    let prev$container = null;
+
     $calendarDates.onmouseover = e => {
-      const $container = e.target.closest('.items');
+      if (prevAfterElemnt) prevAfterElemnt.style.border = 'none';
+      if (prev$container) prev$container.style.border = 'none';
+
+      $container = e.target.closest('.items');
       if (!$container) return;
-      const afterElement = e.target.closest('li');
-      const draggable = document.querySelector('.dragging');
+      afterElement = e.target.closest('li');
+      draggable = document.querySelector('.dragging');
       if (afterElement === draggable) {
         return;
       }
+
       if (afterElement == null) {
-        $container.appendChild(draggable);
-        draggable.style['border-bottom'] = 'none';
-        draggable.style['border-top'] = 'solid 5px gray';
+        if (!$container.lastElementChild) {
+          $container.style['border-top'] = 'solid 5px gray';
+          prev$container = $container;
+        } else {
+          $container.lastElementChild.style['border-bottom'] = 'solid 5px gray';
+          prev$container = $container.lastElementChild;
+        }
       } else {
-        $container.insertBefore(draggable, afterElement);
-        draggable.style['border-top'] = 'none';
-        draggable.style['border-bottom'] = 'solid 5px gray';
+        afterElement.style['border-top'] = 'solid 5px gray';
+        prevAfterElemnt = afterElement;
       }
     };
 
     const removeDraggingClass = () => {
+      if (prevAfterElemnt) prevAfterElemnt.style.border = 'none';
+      if (prev$container) prev$container.style.border = 'none';
+      if (!$container) return;
+      if (afterElement == null) {
+        $container.appendChild(draggable);
+      } else {
+        $container.insertBefore(draggable, afterElement);
+      }
       mousedownEvent.target.parentNode.parentNode.parentNode.style.border =
         'none';
       mousedownEvent.target.parentNode.parentNode.parentNode.classList.remove(
@@ -44,4 +66,4 @@ $calendarDates.addEventListener('mousedown', mousedownEvent => {
     document.addEventListener('mouseup', removeDraggingClass);
   }
 });
-// -----------------------------------------------
+// ----------------------------------------------------------------
