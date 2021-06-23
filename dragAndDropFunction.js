@@ -44,12 +44,6 @@ $calendarDates.addEventListener('mousedown', mousedownEvent => {
     const removeDraggingClass = () => {
       if (prevAfterElemnt) prevAfterElemnt.style.border = 'none';
       if (prev$container) prev$container.style.border = 'none';
-      if (!$container) return;
-      if (afterElement == null) {
-        $container.appendChild(draggable);
-      } else {
-        $container.insertBefore(draggable, afterElement);
-      }
       mousedownEvent.target.parentNode.parentNode.parentNode.style.border =
         'none';
       mousedownEvent.target.parentNode.parentNode.parentNode.classList.remove(
@@ -61,6 +55,12 @@ $calendarDates.addEventListener('mousedown', mousedownEvent => {
       mousedownEvent.target.parentNode.style['pointer-events'] = 'auto';
       mousedownEvent.target.parentNode.parentNode.style['pointer-events'] =
         'auto';
+      if (!$container) return;
+      if (afterElement == null) {
+        $container.appendChild(draggable);
+      } else {
+        $container.insertBefore(draggable, afterElement);
+      }
     };
 
     document.addEventListener('mouseup', removeDraggingClass);
