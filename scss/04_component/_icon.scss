@@ -31,4 +31,8 @@
     background: url(../../img/delete.png) 50%/54% no-repeat $white;
     border-radius: 100%;
   }
+
+  &-close {
+    background: url(../../img/close.png) 50%/40% no-repeat;
+  }
 }
