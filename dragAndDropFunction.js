@@ -1,5 +1,10 @@
 // -------------------Drag and Drop Function-----------------------
 $calendarDates.addEventListener('mousedown', mousedownEvent => {
+  const initialMousePos = {
+    x: mousedownEvent.clientX,
+    y: mousedownEvent.clientY
+  };
+
   if (mousedownEvent.target.classList.contains('icon-move')) {
     mousedownEvent.target.style['pointer-events'] = 'none';
     mousedownEvent.target.parentNode.style['pointer-events'] = 'none';
@@ -8,6 +13,18 @@ $calendarDates.addEventListener('mousedown', mousedownEvent => {
     mousedownEvent.target.parentNode.parentNode.parentNode.classList.add(
       'dragging'
     );
+    [...document.querySelectorAll('.item-control-btn')].forEach(
+      $itemControlBtn => {
+        $itemControlBtn.classList.toggle('--invisible');
+      }
+    );
+
+    $calendarDates.onmousemove = e => {
+      const draggable = document.querySelector('.dragging');
+      draggable.style.transform = `translate3d(${
+        e.clientX - initialMousePos.x
+      }px, ${e.clientY - initialMousePos.y}px, 0)`;
+    };
 
     let afterElement = null;
     let draggable = null;
@@ -31,9 +48,19 @@ $calendarDates.addEventListener('mousedown', mousedownEvent => {
         if (!$container.lastElementChild) {
           $container.style['border-top'] = 'solid 5px gray';
           prev$container = $container;
-        } else {
+        } else if (
+          $container.lastElementChild === draggable &&
+          draggable.previousElementSibling
+        ) {
+          draggable.previousElementSibling.style['border-bottom'] =
+            'solid 5px gray';
+          prev$container = draggable.previousElementSibling;
+        } else if ($container.lastElementChild !== draggable) {
           $container.lastElementChild.style['border-bottom'] = 'solid 5px gray';
           prev$container = $container.lastElementChild;
+        } else {
+          $container.style['border-top'] = 'solid 5px gray';
+          prev$container = $container;
         }
       } else {
         afterElement.style['border-top'] = 'solid 5px gray';
@@ -42,6 +69,8 @@ $calendarDates.addEventListener('mousedown', mousedownEvent => {
     };
 
     const removeDraggingClass = () => {
+      $calendarDates.onmousemove = null;
+      draggable.style.transform = 'none';
       if (prevAfterElemnt) prevAfterElemnt.style.border = 'none';
       if (prev$container) prev$container.style.border = 'none';
       mousedownEvent.target.parentNode.parentNode.parentNode.style.border =
@@ -55,6 +84,12 @@ $calendarDates.addEventListener('mousedown', mousedownEvent => {
       mousedownEvent.target.parentNode.style['pointer-events'] = 'auto';
       mousedownEvent.target.parentNode.parentNode.style['pointer-events'] =
         'auto';
+      [...document.querySelectorAll('.item-control-btn')].forEach(
+        $itemControlBtn => {
+          $itemControlBtn.classList.toggle('--invisible');
+        }
+      );
+
       if (!$container) return;
       if (afterElement == null) {
         $container.appendChild(draggable);
