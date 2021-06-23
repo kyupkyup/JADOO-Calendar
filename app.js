@@ -69,11 +69,26 @@ const closest = ($startElem, targetClass, endClass) => {
 };
 
 document.querySelector('.calendar-dates').addEventListener('click', e => {
+  // -------------------Hover Function-----------------------
+  const $selectedControlBtn = closest(
+    e.target,
+    'item-control-btn',
+    'calendar-dates'
+  );
+  if ($selectedControlBtn) {
+    $selectedControlBtn.nextElementSibling.classList.toggle('--show');
+    return;
+  }
+  // --------------------------------------------------------
   const $selectedAddBtn = closest(e.target, 'item-add-btn', 'calendar-dates');
-  if (!$selectedAddBtn) return;
+  if ($selectedAddBtn) {
+    const itemDate = $selectedAddBtn.dataset.date;
+    modalAdd.toggle(itemDate);
+  }
 
-  const itemDate = $selectedAddBtn.dataset.date;
-  modalAdd.toggle(itemDate);
+  // [...document.querySelectorAll('.--show')].forEach($showedUtil => {
+  //   $showedUtil.classList.remove('--show');
+  // });
 });
 
 document.querySelector('.modal-dim').addEventListener('click', () => {
