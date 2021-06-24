@@ -27,7 +27,7 @@ $calendarDates.addEventListener('mousedown', e => {
       }px, ${e.clientY - initialMousePos.y}px, 0)`;
     };
 
-    const mouseEventInMouseDownEvnet = (() => {
+    const mouseEventInMouseDownEvent = (() => {
       let $container = null;
       let $prevContainer = null;
       let $nextElement = null;
@@ -99,11 +99,11 @@ $calendarDates.addEventListener('mousedown', e => {
           $calendarDates.removeEventListener('mousemove', mouseMoveEvent);
           $calendarDates.removeEventListener(
             'mouseover',
-            mouseEventInMouseDownEvnet.mouseOverEvent
+            mouseEventInMouseDownEvent.mouseOverEvent
           );
           document.removeEventListener(
             'mouseup',
-            mouseEventInMouseDownEvnet.mouseUpEvent
+            mouseEventInMouseDownEvent.mouseUpEvent
           );
 
           if (!$container) return;
@@ -120,11 +120,11 @@ $calendarDates.addEventListener('mousedown', e => {
     $calendarDates.addEventListener('mousemove', mouseMoveEvent);
     $calendarDates.addEventListener(
       'mouseover',
-      mouseEventInMouseDownEvnet.mouseOverEvent
+      mouseEventInMouseDownEvent.mouseOverEvent
     );
     document.addEventListener(
       'mouseup',
-      mouseEventInMouseDownEvnet.mouseUpEvent
+      mouseEventInMouseDownEvent.mouseUpEvent
     );
   }
 });
