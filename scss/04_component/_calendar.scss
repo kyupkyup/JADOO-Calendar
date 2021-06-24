@@ -1,7 +1,3 @@
-.unactive{
-  background-color: gray;
-  opacity: 0.5;
-}
 .calendar {
   max-height: 100vh;
   overflow-y: auto;
@@ -45,9 +41,10 @@
     font-size: 1.2rem;
 
     @include laptop {
-      position: static;
-      padding-left: 0;
-      width: 100%;
+      // position: static;
+      // padding-left: 0;
+      // width: 100%;
+      opacity: 0;
     }
   }
 
@@ -55,6 +52,15 @@
     position: relative;
     padding: 12px 0;
     min-height: 160px;
+
+    &.unactive {
+      background-color: $lightGray;
+      opacity: 0.8;
+    }
+
+    &.today {
+      border: 3px solid $primaryPlum;
+    }
 
     &-txt {
       display: block;
