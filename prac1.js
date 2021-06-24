@@ -19,7 +19,7 @@ const convertDateToString = (year, month, date) => {
   return newYear + '-' + newMonth + '-' + newDate;
 };
 
-const currentCategory = '네카';
+const currentCategory = '1';
 
 // 클로저
 const calendar = (() => {
@@ -121,7 +121,7 @@ const calendar = (() => {
               // eslint-disable-next-line no-loop-func
               .reduce((acc, item) => {
                 acc +=
-                  item.type === 'todo'
+                  item.type === '1'
                     ? `
                         <li class="item item-todo" data-id=${item.id}>
                             <input
@@ -134,18 +134,18 @@ const calendar = (() => {
                                 )}-${item.id}"
                             />
                             <span class="item-todo-chkicon"></span>
-                            <label class="item-todo-txt" for="item-${convertDateToString(
+                            <label for="item-${convertDateToString(
                               currentYear,
                               currentMonth,
                               i
-                            )}-${item.id}">
+                            )}-${item.id}" class="item-todo-txt" >
                                 ${item.content}
                             </label>
                             ${itemControllerInHTML()}
                         </li>`
                     : `
                     <li class="item item-todo data-id=${item.id}">
-                        <p class="item-post-txt" for="item-${convertDateToString(
+                        <p class="item-post-txt" id="item-${convertDateToString(
                           currentYear,
                           currentMonth,
                           i
@@ -195,7 +195,7 @@ const calendar = (() => {
               // eslint-disable-next-line no-loop-func
               .reduce((acc, item) => {
                 acc +=
-                  item.type === 'todo'
+                  item.type === '1'
                     ? `
                         <li class="item item-todo" data-id=${item.id}>
                             <input
@@ -208,18 +208,18 @@ const calendar = (() => {
                                 )}-${item.id}"
                             />
                             <span class="item-todo-chkicon"></span>
-                            <label class="item-todo-txt" for="item-${convertDateToString(
+                            <label for="item-${convertDateToString(
                               currentYear,
                               currentMonth,
                               i
-                            )}-${item.id}">
+                            )}-${item.id}" class="item-todo-txt" >
                                 ${item.content}
                             </label>
                           ${itemControllerInHTML()}
                         </li>`
                     : `
                     <li class="item item-todo" data-id=${item.id}>
-                        <p class="item-post-txt" for="item-${convertDateToString(
+                        <p class="item-post-txt" id="item-${convertDateToString(
                           currentYear,
                           currentMonth,
                           i
@@ -266,7 +266,7 @@ const calendar = (() => {
               // eslint-disable-next-line no-loop-func
               .reduce((acc, item) => {
                 acc +=
-                  item.type === 'todo'
+                  item.type === '1'
                     ? `
                         <li class="item item-todo" data-id=${item.id}>
                             <input
@@ -279,18 +279,18 @@ const calendar = (() => {
                                 )}-${item.id}"
                             />
                             <span class="item-todo-chkicon"></span>
-                            <label class="item-todo-txt" for="item-${convertDateToString(
+                            <label for="item-${convertDateToString(
                               currentYear,
                               currentMonth,
                               i
-                            )}-${item.id}">
+                            )}-${item.id} class="item-todo-txt" ">
                                 ${item.content}
                             </label>
                             ${itemControllerInHTML()}
                         </li>`
                     : `
                     <li class="item item-todo" data-id=${item.id}>
-                        <p class="item-post-txt" for="item-${convertDateToString(
+                        <p class="item-post-txt" id="item-${convertDateToString(
                           currentYear,
                           currentMonth,
                           i
@@ -341,7 +341,7 @@ const calendar = (() => {
                 // eslint-disable-next-line no-loop-func
                 .reduce((acc, item) => {
                   acc +=
-                    item.type === 'todo'
+                    item.type === '1'
                       ? `
                           <li class="item item-todo" data-id=${item.id}>
                               <input
@@ -354,18 +354,18 @@ const calendar = (() => {
                                   )}-${item.id}"
                               />
                               <span class="item-todo-chkicon"></span>
-                              <label class="item-todo-txt" for="item-${convertDateToString(
+                              <label for="item-${convertDateToString(
                                 lastYear,
                                 lastMonth,
                                 i
-                              )}-${item.id}">
+                              )}-${item.id}" class="item-todo-txt" >
                                   ${item.content}
                               </label>
                               ${itemControllerInHTML()}
                           </li>`
                       : `
                       <li class="item item-todo" data-id=${item.id}>
-                          <p class="item-post-txt" for="item-${convertDateToString(
+                          <p class="item-post-txt" id="item-${convertDateToString(
                             lastYear,
                             lastMonth,
                             i
@@ -415,7 +415,7 @@ const calendar = (() => {
                 // eslint-disable-next-line no-loop-func
                 .reduce((acc, item) => {
                   acc +=
-                    item.type === 'todo'
+                    item.type === '1'
                       ? `
                           <li class="item item-todo" data-id=${item.id}>
                               <input
@@ -428,18 +428,18 @@ const calendar = (() => {
                                   )}-${item.id}"
                               />
                               <span class="item-todo-chkicon"></span>
-                              <label class="item-todo-txt" for="item-${convertDateToString(
+                              <label for="item-${convertDateToString(
                                 lastYear,
                                 lastMonth,
                                 i
-                              )}-${item.id}">
+                              )}-${item.id}" class="item-todo-txt" >
                                   ${item.content}
                               </label>
                               ${itemControllerInHTML()}
                           </li>`
                       : `
                       <li class="item item-todo" data-id=${item.id}>
-                          <p class="item-post-txt" for="item-${convertDateToString(
+                          <p class="item-post-txt" id="item-${convertDateToString(
                             lastYear,
                             lastMonth,
                             i
@@ -496,7 +496,7 @@ const calendar = (() => {
                 // eslint-disable-next-line no-loop-func
                 .reduce((acc, item) => {
                   acc +=
-                    item.type === 'todo'
+                    item.type === '1'
                       ? `
                           <li class="item item-todo">
                               <input
@@ -509,18 +509,18 @@ const calendar = (() => {
                                   )}-${item.id}"
                               />
                               <span class="item-todo-chkicon"></span>
-                              <label class="item-todo-txt" for="item-${convertDateToString(
+                              <label for="item-${convertDateToString(
                                 firstYear,
                                 firstMonth,
                                 i
-                              )}-${item.id}">
+                              )}-${item.id}" class="item-todo-txt" >
                                   ${item.content}
                               </label>
                               ${itemControllerInHTML()}
                           </li>`
                       : `
                       <li class="item item-todo">
-                          <p class="item-post-txt" for="item-${convertDateToString(
+                          <p class="item-post-txt" id="item-${convertDateToString(
                             firstYear,
                             firstMonth,
                             i
@@ -562,7 +562,7 @@ const calendar = (() => {
                 // eslint-disable-next-line no-loop-func
                 .reduce((acc, item) => {
                   acc +=
-                    item.type === 'todo'
+                    item.type === '1'
                       ? `
                           <li class="item item-todo">
                               <input
@@ -575,17 +575,17 @@ const calendar = (() => {
                                   )}-${item.id}"
                               />
                               <span class="item-todo-chkicon"></span>
-                              <label class="item-todo-txt" for="item-${convertDateToString(
+                              <label for="item-${convertDateToString(
                                 firstYear,
                                 firstMonth,
                                 i
-                              )}-${item.id}">
+                              )}-${item.id}" class="item-todo-txt" >
                                   ${item.content}
                               </label>
                           </li>`
                       : `
                       <li class="item item-todo">
-                          <p class="item-post-txt" for="item-${convertDateToString(
+                          <p class="item-post-txt" id="item-${convertDateToString(
                             firstYear,
                             firstMonth,
                             i
@@ -674,6 +674,7 @@ const calendar = (() => {
     }
   };
 })();
+
 // 코드 실행 부분
 calendar.renderCalendar();
 
@@ -696,7 +697,7 @@ const addDataArray = ({ date, category, type, content }) => {
   data = [
     ...data,
     {
-      id: data[data.length - 1].id + 1,
+      id: nextDataId,
       type,
       category,
       date,
@@ -711,22 +712,22 @@ const addDataDomTree = ({ date, type, content }) => {
   const $date = dates.find(item => item.dataset.date === date);
 
   const innerDate =
-    type === 'todo'
-      ? `<li class="item item-todo">
+    type === '1'
+      ? `<li class="item item-todo" data-id=${nextDataId}>
             <input
                 class="item-todo-chkbox"
                 type="checkbox"
-                id="item-${date}-${data.length}"
+                id="item-${date}-${nextDataId}"
             />
             <span class="item-todo-chkicon"></span>
-            <label class="item-todo-txt" for="item-${date}-${data.length}">
+            <label for="item-${date}-${nextDataId}" class="item-todo-txt" >
                 ${content}
             </label>
             ${calendar.getItemControllerInHTML()}
         </li>`
       : `
-        <li class="item item-todo">
-            <p class="item-post-txt" for="item-${date}-${data.length}">
+        <li class="item item-todo" data-id=${nextDataId}>
+            <p class="item-post-txt" id="item-${date}-${nextDataId}">
                 ${content}
             </p>
             ${calendar.getItemControllerInHTML()}
@@ -746,19 +747,17 @@ const deleteDataDOM = (itemId, $parentNode) => {
   $parentNode.removeChild($nodeWillDeleted);
 };
 
-const modifyDataArray = ({ id, date, category, type, content }) => {
+const modifyDataArray = ({ id, content }) => {
   const modifiedData = data.filter(item => item.id === id);
-  modifiedData.date = date;
-  modifiedData.category = category;
-  modifiedData.type = type;
   modifiedData.content = content;
-  data = { modifiedData, ...data };
 };
 
-const modifyDataDOM = ({ id, date, category, type, content }) => {
-  const nodeWillModifieds = document.querySelectorAll('.item');
-  const nodeWillModified = [...nodeWillModifieds].find(
-    item => item.dataset.id === id
-  );
-  nodeWillModified.querySelector('label').textContent = content;
+const modifyDataDOM = ({ id, date, type, content }) => {
+  const $modifyItem = document.getElementById(`item-${date}-${id}`);
+
+  if (type === '1') {
+    $modifyItem.nextElementSibling.nextElementSibling.textContent = content;
+  } else {
+    $modifyItem.textContent = content;
+  }
 };
