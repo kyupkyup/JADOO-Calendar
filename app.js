@@ -242,6 +242,12 @@ data = [
 ];
 
 const $calendarDates = document.querySelector('.calendar');
+  
+document.documentElement.style.setProperty(
+  '--scroll-width',
+  $calendarDates.offsetWidth - $calendarDates.clientWidth + 'px'
+);
+
 
 document.documentElement.style.setProperty(
   '--scroll-width',
@@ -739,7 +745,7 @@ const modalAdd = (() => {
   const $titleMonth = $modal.querySelector('.date');
   const $itemDate = $modal.querySelector('.modal-input-date');
   const $itemContent = $modal.querySelector('.modal-input-txt');
-
+  
   return {
     toggle(itemDate) {
       isActive = !isActive;

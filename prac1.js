@@ -2,7 +2,7 @@
  * 달력 관련 소스코드
  *
  */
-const dayTranslate = day => (day === 0 ? 6 : day - 1);
+const dayTranslate = day => day === 0 ? 6 : day - 1;
 
 const getCustomDate = (year, month) => {
   const firstDay = dayTranslate(new Date(year, month - 1).getDay());
@@ -13,15 +13,15 @@ const getCustomDate = (year, month) => {
   return { firstDate, firstDay, lastDate, lastDay, lastMonthDate };
 };
 
-const convertDateToString = (year, month, date) => {
-  const newYear = '' + year;
-  const newMonth = month < 10 ? '0' + month : '' + month;
-  const newDate = date < 10 ? '0' + date : '' + date;
-  return newYear + '-' + newMonth + '-' + newDate;
-};
+const convertDateToString = (year, month, date) =>{
+    const newYear = ''+year;
+    const newMonth = month < 10 ? '0'+month : ''+month;
+    const newDate = date < 10 ? '0'+date : ''+date;
+    return newYear+'-'+newMonth+'-'+newDate
+}
 
 // 클로저
-const calendar = (() => {
+const calendar = (() =>{
   const $calendar = document.querySelector('.calendar');
   const $calendarGrid = document.querySelector('.calendar-dates');
   const $calendarYear = document.querySelector('.nav-year');
@@ -29,15 +29,25 @@ const calendar = (() => {
 
   const dateObj = new Date();
   const year = dateObj.getFullYear();
-  const month = dateObj.getMonth() + 1;
+  const month = dateObj.getMonth()+1;
   const date = dateObj.getDate();
-  let currentMonth = month;
+  let currentMonth = month; 
   let currentYear = year;
   let firstYear = currentYear; // 렌더링 된 가장 마지막 년
-  let lastYear = currentYear;
+  let lastYear = currentYear; 
   let firstMonth = currentMonth; // 렌더링 된 가장 첫번째 년
-  let lastMonth = currentMonth;
-
+  let lastMonth = currentMonth; 
+  let newCurMonth = currentMonth;
+  let newCurYear = currentYear;
+  let $lastStandard = '';
+  const setCurrentYearMonth = (year, month) =>{
+    newCurYear = +year;
+    newCurMonth = +month;
+    firstYear = newCurYear; // 렌더링 된 가장 마지막 년
+    lastYear = newCurYear; 
+    firstMonth = newCurMonth; // 렌더링 된 가장 첫번째 년
+    lastMonth = newCurMonth; 
+  }
   const itemControllerInHTML = () => `
     <button class="item-control-btn" aria-label="아이템컨트롤러">
       <span class="icon icon-control"></span>
@@ -52,26 +62,18 @@ const calendar = (() => {
       <button class="item-delete-btn" aria-label="아이템삭제">
         <span class="icon icon-delete"></span>
       </button>
-    </div>`;
-  const initCalendar = () => {
-    const { firstDay, lastDate, lastDay, lastMonthDate } = getCustomDate(
-      currentYear,
-      currentMonth
-    );
+    </div>`
+      ;
+
+  const initCalendar = () =>{
+    const {firstDay, lastDate, lastDay, lastMonthDate} = getCustomDate(currentYear, currentMonth);
     let temp = '';
-    for (let i = firstDay - 1; i >= 0; i -= 1) {
-      temp += `
-            <div class="calendar-date ${
-              i % 7 === 0 ? 'standard' : ''
-            } unactive" data-date=${convertDateToString(
-        currentYear,
-        currentMonth - 1,
-        i
-      )}>
-            <span class="calendar-date-txt">${lastMonthDate - i}</span>
-            <button class="item-add-btn" aria-label="${currentYear}년 ${currentMonth} 월 ${
-        lastMonthDate - i
-      }일 아이템 추가"><span class="icon icon-add"></span></button>
+    for(let i = firstDay-1; i >= 0; i -= 1)
+    {
+        temp +=  `
+            <div class="calendar-date ${ i % 7 === 0 ? 'standard' : ''} unactive" data-date=${convertDateToString(currentYear, currentMonth-1, i)}>
+            <span class="calendar-date-txt">${lastMonthDate-i}</span>
+            <button class="item-add-btn" aria-label="${currentYear}년 ${currentMonth} 월 ${lastMonthDate-i}일 아이템 추가"><span class="icon icon-add"></span></button>
             <ul class="items">
             ${data
               .filter(item => item.category === currentCategory)
@@ -126,25 +128,12 @@ const calendar = (() => {
         `;
     }
     // current month
-
-    for (let i = 1; i <= lastDate; i += 1) {
-      temp += `
-        <div class="calendar-date ${
-          year === currentYear && month === currentMonth && date === i
-            ? 'today'
-            : ''
-        } ${i % 7 === 0 ? 'standard' : ''}"  data-date=${convertDateToString(
-        currentYear,
-        currentMonth,
-        i
-      )}>
-        <span class="calendar-date-txt">${
-          i === 1 ? currentMonth + '. ' + i : i
-        } ${
-        i % 7 === 0
-          ? `<span class="--hide">${currentYear}</span><span class="--hide">${currentMonth}</span>`
-          : ''
-      }</span>
+    
+    for(let i = 1; i <= lastDate; i += 1){
+        temp += 
+        `
+        <div class="calendar-date ${year === currentYear && month === currentMonth && date===i? 'today' : ''} ${ i % 7 === 0 ? 'standard' : ''}"  data-date=${convertDateToString(currentYear, currentMonth, i)}>
+        <span class="calendar-date-txt">${i === 1 ? currentMonth + '. ' + i : i} ${i % 7 === 0 ? `<span class="--hide">${currentYear}</span><span class="--hide">${currentMonth}</span>`:''}</span>
         <button class="item-add-btn" aria-label="${currentYear}년 ${currentMonth} 월 ${i}일 아이템 추가"><span class="icon icon-add"></span></button>
         <ul class="items">
             ${data
@@ -198,29 +187,12 @@ const calendar = (() => {
         </div>`;
     }
     // next month
-    for (let i = 1; i <= 6 - lastDay; i += 1) {
-      temp += `
-        <div class="calendar-date ${
-          i % 7 === 0 ? 'standard' : ''
-        } unactive" data-date=${convertDateToString(
-        currentYear,
-        currentMonth + 1,
-        i
-      )}>
-        <span class="calendar-date-txt">${
-          i === 1 ? currentMonth + 1 + '. ' + i : i
-        } ${
-        i % 7 === 0
-          ? `<span class="--hide">${
-              currentMonth + 1 > 12 ? currentYear + 1 : currentYear
-            }</span><span class="--hide">${
-              currentMonth + 1 > 12 ? 1 : currentMonth + 1
-            }</span>`
-          : ''
-      }</span></span>
-        <button class="item-add-btn" aria-label="${currentYear}년 ${
-        currentMonth + 1
-      } 월 ${i}일 아이템 추가"><span class="icon icon-add"></span></button>
+    for(let i = 1; i <= 6-lastDay; i += 1){ 
+        temp += 
+        `
+        <div class="calendar-date ${ i % 7 === 0 ? 'standard' : ''} unactive" data-date=${convertDateToString(currentYear, currentMonth+1, i)}>
+        <span class="calendar-date-txt">${i === 1 ? currentMonth + 1 + '. ' + i : i} ${i % 7 === 0 ? `<span class="--hide">${currentMonth+1 > 12 ? currentYear + 1 : currentYear}</span><span class="--hide">${currentMonth+1 > 12 ? 1 : currentMonth + 1}</span>`:''}</span></span>
+        <button class="item-add-btn" aria-label="${currentYear}년 ${currentMonth+1} 월 ${i}일 아이템 추가"><span class="icon icon-add"></span></button>
         <ul class="items">
             ${data
               .filter(item => item.category === currentCategory)
@@ -274,394 +246,285 @@ const calendar = (() => {
         `;
     }
     $calendarGrid.innerHTML = temp;
-  };
-  const changeNextMonth = () => {
-    lastMonth += 1;
-    lastYear = lastMonth > 12 ? lastYear + 1 : lastYear;
-    lastMonth = lastMonth > 12 ? 1 : lastMonth;
-    const { firstDay, lastDate, lastDay } = getCustomDate(lastYear, lastMonth);
-    let temp = '';
+  }
+  const changeNextMonth = () =>{
+      lastMonth += 1
+      lastYear = lastMonth > 12 ? lastYear + 1 : lastYear;
+      lastMonth = lastMonth > 12 ? 1 : lastMonth;
+      const {firstDay, lastDate, lastDay} = getCustomDate(lastYear, lastMonth);
+      let temp = '';
 
-    for (let i = 8 - firstDay === 8 ? 1 : 8 - firstDay; i <= lastDate; i += 1) {
-      temp += `
-          <div class="calendar-date ${
-            i % 7 === 0 ? 'standard' : ''
-          } unactive" data-date=${convertDateToString(lastYear, lastMonth, i)}>
-          <span class="calendar-date-txt"> ${
-            i === 1 ? lastMonth + '. ' + i : i
-          } ${
-        i % 7 === 0
-          ? `<span class="--hide">${lastYear}</span><span class="--hide">${lastMonth}</span>`
-          : ''
-      }</span>
-          <button class="item-add-btn" aria-label="${lastYear}년 ${lastMonth} 월 ${
-        i === 1 ? lastMonth + ',' + i : i
-      }일 아이템 추가"><span class="icon icon-add"></span></button>
+      for(let i = 8-firstDay === 8 ? 1 : 8-firstDay; i <= lastDate; i += 1){
+          temp += `
+          <div class="calendar-date ${ i % 7 === 0 ? 'standard' : ''} unactive" data-date=${convertDateToString(lastYear, lastMonth, i)}>
+          <span class="calendar-date-txt"> ${i === 1 ? lastMonth + '. ' + i : i} ${i % 7 === 0 ? `<span class="--hide">${lastYear}</span><span class="--hide">${lastMonth}</span>`:''}</span>
+          <button class="item-add-btn" aria-label="${lastYear}년 ${lastMonth} 월 ${i === 1 ? lastMonth + ',' + i : i}일 아이템 추가"><span class="icon icon-add"></span></button>
           <ul class="items">
               ${data
-                .filter(item => item.category === currentCategory)
-                // eslint-disable-next-line no-loop-func
-                .filter(
-                  item =>
-                    item.date === convertDateToString(lastYear, lastMonth, i)
-                )
-                // eslint-disable-next-line no-loop-func
-                .reduce((acc, item) => {
-                  acc +=
-                    item.type === 'todo'
-                      ? `
+                  .filter(item => item.category === currentCategory)
+                  // eslint-disable-next-line no-loop-func
+                  .filter(item => item.date === convertDateToString(lastYear, lastMonth, i))
+                  // eslint-disable-next-line no-loop-func
+                  .reduce((acc, item) => {
+                      acc += item.type === 'todo' ? 
+                          `
                           <li class="item item-todo" data-id=${item.id}>
                               <input
                                   class="item-todo-chkbox"
                                   type="checkbox"
-                                  id="item-${convertDateToString(
-                                    lastYear,
-                                    lastMonth,
-                                    i
-                                  )}-${item.id}"
+                                  id="item-${convertDateToString(lastYear, lastMonth, i)}-${item.id}"
                               />
                               <span class="item-todo-chkicon"></span>
-                              <label class="item-todo-txt" for="item-${convertDateToString(
-                                lastYear,
-                                lastMonth,
-                                i
-                              )}-${item.id}">
+                              <label class="item-todo-txt" for="item-${convertDateToString(lastYear, lastMonth, i)}-${item.id}">
                                   ${item.content}
                               </label>
                               ${itemControllerInHTML()}
                           </li>`
-                      : `
+                      :
+                      `
                       <li class="item item-todo" data-id=${item.id}>
-                          <p class="item-post-txt" for="item-${convertDateToString(
-                            lastYear,
-                            lastMonth,
-                            i
-                          )}-${item.id}">
+                          <p class="item-post-txt" for="item-${convertDateToString(lastYear, lastMonth, i)}-${item.id}">
                               ${item.content}
                           </p>
                           ${itemControllerInHTML()}
                       </li>
-                    `;
-                  return acc;
-                }, [])}
+                    `
+                    return acc;
+                  }, [])}
           </ul>
           </div>
           `;
-    }
-    // next month
-    for (let i = 1; i <= 6 - lastDay; i += 1) {
-      temp += `
-          <div class="calendar-date ${
-            i % 7 === 0 ? 'standard' : ''
-          } unactive" data-date=${convertDateToString(
-        lastYear,
-        lastMonth + 1,
-        i
-      )}>
-          <span class="calendar-date-txt"> ${
-            i === 1 ? (lastMonth >= 12 ? 0 : lastMonth) + 1 + '. ' + i : i
-          } ${
-        i % 7 === 0
-          ? `<span class="--hide">${
-              lastMonth + 1 > 12 ? lastYear + 1 : lastYear
-            }</span><span class="--hide">${
-              lastMonth + 1 > 12 ? 1 : lastMonth + 1
-            }</span>`
-          : ''
-      }</span>
-          </span>
-          <button class="item-add-btn" aria-label="${lastYear}년 ${
-        lastMonth + 1
-      } 월 ${
-        i === 1 ? (lastMonth >= 12 ? 0 : lastMonth) + 1 + '. ' + i : i
-      }일 아이템 추가"><span class="icon icon-add"></span></button>
-          <ul class="items">
-              ${data
-                .filter(item => item.category === currentCategory)
-                // eslint-disable-next-line no-loop-func
-                .filter(
-                  item =>
-                    item.date === convertDateToString(lastYear, lastMonth, i)
-                )
-                // eslint-disable-next-line no-loop-func
-                .reduce((acc, item) => {
-                  acc +=
-                    item.type === 'todo'
-                      ? `
-                          <li class="item item-todo" data-id=${item.id}>
-                              <input
-                                  class="item-todo-chkbox"
-                                  type="checkbox"
-                                  id="item-${convertDateToString(
-                                    lastYear,
-                                    lastMonth,
-                                    i
-                                  )}-${item.id}"
-                              />
-                              <span class="item-todo-chkicon"></span>
-                              <label class="item-todo-txt" for="item-${convertDateToString(
-                                lastYear,
-                                lastMonth,
-                                i
-                              )}-${item.id}">
-                                  ${item.content}
-                              </label>
-                              ${itemControllerInHTML()}
-                          </li>`
-                      : `
-                      <li class="item item-todo" data-id=${item.id}>
-                          <p class="item-post-txt" for="item-${convertDateToString(
-                            lastYear,
-                            lastMonth,
-                            i
-                          )}-${item.id}">
-                              ${item.content}
-                          </p>
-                          ${itemControllerInHTML()}
-                      </li>
-                    `;
-                  return acc;
-                }, [])}
-          </ul>
-          </div>
-          `;
-    }
-    $calendarGrid.insertAdjacentHTML('beforeend', temp);
-  };
-  const changePrevMonth = () => {
-    firstMonth -= 1;
-    firstYear = firstMonth < 1 ? firstYear - 1 : firstYear;
-    firstMonth = firstMonth < 1 ? 12 : firstMonth;
-    const { firstDay, lastDate, lastDay, lastMonthDate } = getCustomDate(
-      firstYear,
-      firstMonth
-    );
-    let temp = '';
-
-    for (let i = firstDay - 1; i >= 0; i -= 1) {
-      temp += `
-          <div class="calendar-date ${
-            i % 7 === 0 ? 'standard' : ''
-          } unactive" data-date=${convertDateToString(
-        firstYear,
-        firstMonth - 1,
-        lastMonthDate - i
-      )}>
-          <span class="calendar-date-txt"> ${
-            lastMonthDate - i === 1
-              ? firstMonth + '.' + lastMonthDate - i
-              : lastMonthDate - i
-          } ${
-        lastMonthDate - (i % 7) === 0
-          ? `<span class="--hide">${firstYear}</span><span class="--hide">${firstMonth}</span>`
-          : ''
       }
+      // next month
+      for(let i = 1; i <= 6-lastDay; i += 1){
+          temp += `
+          <div class="calendar-date ${ i % 7 === 0 ? 'standard' : ''} unactive" data-date=${convertDateToString(lastYear, lastMonth+1, i)}>
+          <span class="calendar-date-txt"> ${i === 1 ? (lastMonth >= 12 ? 0 : lastMonth) + 1 + '. ' + i : i} ${i % 7 === 0 ? `<span class="--hide">${lastMonth+1 > 12 ? lastYear + 1 : lastYear}</span><span class="--hide">${lastMonth+1 > 12 ? 1 : lastMonth + 1}</span>`:''}</span>
           </span>
-          <button class="item-add-btn" aria-label="${firstYear}년 ${firstMonth} 월 ${
-        lastMonthDate - i === 1
-          ? firstMonth + '.' + lastMonthDate - i
-          : lastMonthDate - i
-      }일 아이템 추가"><span class="icon icon-add"></span></button>
+          <button class="item-add-btn" aria-label="${lastYear}년 ${lastMonth+1} 월 ${i === 1 ? (lastMonth >= 12 ? 0 : lastMonth) + 1 + '. ' + i : i}일 아이템 추가"><span class="icon icon-add"></span></button>
           <ul class="items">
               ${data
-                .filter(item => item.category === currentCategory)
-                // eslint-disable-next-line no-loop-func
-                .filter(
-                  item =>
-                    item.date === convertDateToString(firstYear, firstMonth, i)
-                )
-                // eslint-disable-next-line no-loop-func
-                .reduce((acc, item) => {
-                  acc +=
-                    item.type === 'todo'
-                      ? `
+                  .filter(item => item.category === currentCategory)
+                  // eslint-disable-next-line no-loop-func
+                  .filter(item => item.date === convertDateToString(lastYear, lastMonth, i))
+                  // eslint-disable-next-line no-loop-func
+                  .reduce((acc, item) => {
+                      acc += item.type === 'todo' ? 
+                          `
+                          <li class="item item-todo" data-id=${item.id}>
+                              <input
+                                  class="item-todo-chkbox"
+                                  type="checkbox"
+                                  id="item-${convertDateToString(lastYear, lastMonth, i)}-${item.id}"
+                              />
+                              <span class="item-todo-chkicon"></span>
+                              <label class="item-todo-txt" for="item-${convertDateToString(lastYear, lastMonth, i)}-${item.id}">
+                                  ${item.content}
+                              </label>
+                              ${itemControllerInHTML()}
+                          </li>`
+                      :
+                      `
+                      <li class="item item-todo" data-id=${item.id}>
+                          <p class="item-post-txt" for="item-${convertDateToString(lastYear, lastMonth, i)}-${item.id}">
+                              ${item.content}
+                          </p>
+                          ${itemControllerInHTML()}
+                      </li>
+                    `
+                    return acc;
+                  }, [])}
+          </ul>
+          </div>
+          `;
+
+      }
+      $calendarGrid.insertAdjacentHTML('beforeend', temp);
+  }
+  const changePrevMonth = () =>{
+      firstMonth -= 1
+      firstYear = firstMonth < 1 ? firstYear - 1 : firstYear;
+      firstMonth = firstMonth < 1 ? 12 : firstMonth;
+      const {firstDay, lastDate, lastDay, lastMonthDate} = getCustomDate(firstYear, firstMonth);
+      let temp = '';
+
+      for(let i = firstDay-1; i >= 0; i -= 1)
+      {
+          temp += 
+          `
+          <div class="calendar-date ${ i % 7 === 0 ? 'standard' : ''} unactive" data-date=${convertDateToString(firstYear, firstMonth-1, lastMonthDate - i)}>
+          <span class="calendar-date-txt"> ${lastMonthDate-i === 1 ? firstMonth + '.'+ lastMonthDate - i : lastMonthDate - i} ${ lastMonthDate-i % 7 === 0 ? `<span class="--hide">${firstYear}</span><span class="--hide">${firstMonth}</span>`:''}
+          </span>
+          <button class="item-add-btn" aria-label="${firstYear}년 ${firstMonth} 월 ${lastMonthDate-i === 1 ? firstMonth + '.'+ lastMonthDate - i : lastMonthDate - i}일 아이템 추가"><span class="icon icon-add"></span></button>
+          <ul class="items">
+              ${data
+                  .filter(item => item.category === currentCategory)
+                  // eslint-disable-next-line no-loop-func
+                  .filter(item => item.date === convertDateToString(firstYear, firstMonth, i))
+                  // eslint-disable-next-line no-loop-func
+                  .reduce((acc, item) => {
+                      acc += item.type === 'todo' ? 
+                          `
                           <li class="item item-todo">
                               <input
                                   class="item-todo-chkbox"
                                   type="checkbox"
-                                  id="item-${convertDateToString(
-                                    firstYear,
-                                    firstMonth,
-                                    i
-                                  )}-${item.id}"
+                                  id="item-${convertDateToString(firstYear, firstMonth, i)}-${item.id}"
                               />
                               <span class="item-todo-chkicon"></span>
-                              <label class="item-todo-txt" for="item-${convertDateToString(
-                                firstYear,
-                                firstMonth,
-                                i
-                              )}-${item.id}">
+                              <label class="item-todo-txt" for="item-${convertDateToString(firstYear, firstMonth, i)}-${item.id}">
                                   ${item.content}
                               </label>
                               ${itemControllerInHTML()}
                           </li>`
-                      : `
+                      :
+                      `
                       <li class="item item-todo">
-                          <p class="item-post-txt" for="item-${convertDateToString(
-                            firstYear,
-                            firstMonth,
-                            i
-                          )}-${item.id}">
+                          <p class="item-post-txt" for="item-${convertDateToString(firstYear, firstMonth, i)}-${item.id}">
                               ${item.content}
                           </p>
                       </li>
-                    `;
-                  return acc;
-                }, [])}
+                    `
+                    return acc;
+                  }, [])}
           </ul>
           </div>`;
-    }
-    for (
-      let i = 1;
-      i <= lastDate - (lastDay === 6 ? -1 : lastDay) - 1;
-      i += 1
-    ) {
-      temp += `
-          <div class="calendar-date ${
-            i % 7 === 0 ? 'standard' : ''
-          } unactive" data-date=${convertDateToString(
-        firstYear,
-        firstMonth,
-        i
-      )}>
-          <span class="calendar-date-txt">  ${
-            i === 1 ? firstMonth + '.' + i : i
-          }
-          ${
-            i % 7 === 0
-              ? `<span class="--hide">${firstYear}</span><span class="--hide">${firstMonth}</span>`
-              : ''
-          }</span>
+      }
+      for(let i = 1; i <= lastDate - (lastDay === 6 ? -1 : lastDay)-1; i += 1){
+          temp += `
+          <div class="calendar-date ${ i % 7 === 0 ? 'standard' : ''} unactive" data-date=${convertDateToString(firstYear, firstMonth, i)}>
+          <span class="calendar-date-txt">  ${i === 1 ? firstMonth +'.' + i : i}
+          ${ i % 7 === 0 ? `<span class="--hide">${firstYear}</span><span class="--hide">${firstMonth}</span>`:''}</span>
           </span>
-          <button class="item-add-btn" aria-label="${firstYear}년 ${firstMonth} 월 ${
-        i === 1 ? firstMonth + '.' + i : i
-      }일 아이템 추가"><span class="icon icon-add"></span></button>
+          <button class="item-add-btn" aria-label="${firstYear}년 ${firstMonth} 월 ${i === 1 ? firstMonth +'.' + i : i}일 아이템 추가"><span class="icon icon-add"></span></button>
           <ul class="items">
               ${data
-                .filter(item => item.category === currentCategory)
-                // eslint-disable-next-line no-loop-func
-                .filter(
-                  item =>
-                    item.date === convertDateToString(firstYear, firstMonth, i)
-                )
-                // eslint-disable-next-line no-loop-func
-                .reduce((acc, item) => {
-                  acc +=
-                    item.type === 'todo'
-                      ? `
+                  .filter(item => item.category === currentCategory)
+                  // eslint-disable-next-line no-loop-func
+                  .filter(item => item.date === convertDateToString(firstYear, firstMonth, i))
+                  // eslint-disable-next-line no-loop-func
+                  .reduce((acc, item) => {
+                      acc += item.type === 'todo' ? 
+                          `
                           <li class="item item-todo">
                               <input
                                   class="item-todo-chkbox"
                                   type="checkbox"
-                                  id="item-${convertDateToString(
-                                    firstYear,
-                                    firstMonth,
-                                    i
-                                  )}-${item.id}"
+                                  id="item-${convertDateToString(firstYear, firstMonth, i)}-${item.id}"
                               />
                               <span class="item-todo-chkicon"></span>
-                              <label class="item-todo-txt" for="item-${convertDateToString(
-                                firstYear,
-                                firstMonth,
-                                i
-                              )}-${item.id}">
+                              <label class="item-todo-txt" for="item-${convertDateToString(firstYear, firstMonth, i)}-${item.id}">
                                   ${item.content}
                               </label>
                           </li>`
-                      : `
+                      :
+                      `
                       <li class="item item-todo">
-                          <p class="item-post-txt" for="item-${convertDateToString(
-                            firstYear,
-                            firstMonth,
-                            i
-                          )}-${item.id}">
+                          <p class="item-post-txt" for="item-${convertDateToString(firstYear, firstMonth, i)}-${item.id}">
                               ${item.content}
                           </p>
                           ${itemControllerInHTML()}
                       </li>
-                    `;
-                  return acc;
-                }, [])}
+                    `
+                    return acc;
+                  }, [])}
           </ul>
           </div>
-          `;
-    }
-    $calendarGrid.insertAdjacentHTML('afterbegin', temp);
-  };
-  const throttling = (() => {
-    let throttleCheck;
-    return {
-      throttle(callback, milliseconds) {
-        if (!throttleCheck) {
-          throttleCheck = setTimeout(() => {
-            callback();
-            throttleCheck = false;
-          }, milliseconds);
-        }
+          `
       }
-    };
+      $calendarGrid.insertAdjacentHTML('afterbegin', temp);
+  }
+  const throttling = (() => {
+      let throttleCheck;
+      return {
+          throttle(callback, milliseconds){
+              if(!throttleCheck){
+                  throttleCheck = setTimeout(() => {
+                      callback();
+                      throttleCheck = false;
+                  }, milliseconds);
+              }
+          }
+      };
   })();
 
   return {
-    renderCalendar: () => {
-      // 전체 렌더
+    renderCalendar: () => { // 전체 렌더
       initCalendar();
       changeNextMonth();
       changePrevMonth();
-      $calendarYear.textContent = year + '';
-      $calendarMonth.textContent = month + '';
+      $calendarYear.textContent = year+"";
+      $calendarMonth.textContent = month < 10 ? '0'+month : ''+month;
     },
-    observe: io => {
-      throttling.throttle(() => {
-        const $standards = document.querySelectorAll('.standard');
-        [...$standards].forEach($standard => {
-          io.observe($standard);
+    observe: io =>{
+        throttling.throttle(() =>{
+            const $standards = document.querySelectorAll('.standard');
+            [...$standards].forEach($standard => {
+                io.observe($standard);
+            });
         });
-      });
     },
-    returnInitIO: new IntersectionObserver(
-      entries => {
+    returnInitIO : new IntersectionObserver(entries =>{
         entries.forEach(entry => {
-          // 기준 점의 날짜를 가져와서 lastDate - 기준 날짜
-          // firstDate + 기준 날짜
-          if (entry.isIntersecting) {
-            const allUnActiveElements =
-              document.querySelectorAll('.calendar-date');
-            allUnActiveElements.forEach(item => item.classList.add('unactive'));
-            [$calendarYear.textContent, $calendarMonth.textContent] =
-              entry.target.dataset.date.split('-');
-            const { firstDate, lastDate } = getCustomDate(
-              +$calendarYear.textContent,
-              +$calendarMonth.textContent
-            );
-            const [, , standardDate] = entry.target.dataset.date.split('-');
-            let node = entry.target;
-            for (let date = 1; date < firstDate + +standardDate; date += 1) {
-              node.classList.remove('unactive');
-              const nextNode = node;
-              node = nextNode.previousElementSibling;
-            }
-            node = entry.target;
+            // 기준 점의 날짜를 가져와서 lastDate - 기준 날짜 
+            // firstDate + 기준 날짜
+                if(entry.isIntersecting){
+                    const allUnActiveElements = document.querySelectorAll('.calendar-date');
+                    allUnActiveElements.forEach(item => item.classList.add('unactive'));        
+                    [$calendarYear.textContent, $calendarMonth.textContent, ] = entry.target.dataset.date.split('-');
+                    const { firstDate, lastDate } = getCustomDate(+$calendarYear.textContent, +$calendarMonth.textContent);
+                    $lastStandard = entry.target;
+                    setCurrentYearMonth($calendarYear.textContent, $calendarMonth.textContent);
+                    const [,,standardDate] = entry.target.dataset.date.split('-'); 
+                    let node = entry.target;
+                    for(let date = 1; date < firstDate + (+standardDate); date += 1){
+                        node.classList.remove('unactive');
+                        const nextNode = node;
+                        node = nextNode.previousElementSibling;
+                    }
+                    node = entry.target;
 
-            for (let date = 0; date < lastDate - +standardDate + 1; date += 1) {
-              node.classList.remove('unactive');
-              const nextNode = node;
-              node = nextNode.nextElementSibling;
-            }
-          }
-        });
-      },
-      {
-        root: $calendar,
-        rootMargin: '-49% 0px -49% 0px'
-      }
-    ),
+                    for(let date = 0; date < lastDate - (+standardDate)+1; date += 1){
+                        node.classList.remove('unactive');
+                        const nextNode = node;
+                        node = nextNode.nextElementSibling;
+                    }
+                }
+
+            } );
+          }, {
+              root:$calendar,
+              rootMargin: '-49% 0px -49% 0px'
+          }),
     getCalendarElement: () => $calendar,
-    getInitCalendar: initCalendar,
-    getChangeNextMonth: changeNextMonth,
-    getItemControllerInHTML: itemControllerInHTML,
-    getChangePrevMonth: changePrevMonth,
-    changeToToday: todayPosition => {
+    getInitCalendar : initCalendar,
+    getChangeNextMonth : changeNextMonth,
+    getItemControllerInHTML : itemControllerInHTML,
+    getChangePrevMonth : changePrevMonth,
+    setDateReset: () =>{
+      currentMonth = month; 
+      currentYear = year;
+      firstYear = currentYear; // 렌더링 된 가장 마지막 년
+      lastYear = currentYear; 
+      firstMonth = currentMonth; // 렌더링 된 가장 첫번째 년
+      lastMonth = currentMonth; 
+    },
+    renderCalendarDateWithSavedDate : () =>{
+      currentYear = +newCurYear;
+      currentMonth = +newCurMonth;
+      firstYear = currentYear; // 렌더링 된 가장 마지막 년
+      lastYear = currentYear; 
+      firstMonth = currentMonth; // 렌더링 된 가장 첫번째 년
+      lastMonth = currentMonth; 
+      initCalendar();
+      changeNextMonth();
+      changePrevMonth();
+
+      $calendar.scrollTo(0, $lastStandard.getBoundingClientRect().top+ ($calendar.clientHeight));
+      $calendarYear.textContent = currentYear+"";
+      $calendarMonth.textContent = currentMonth < 10 ? '0'+currentMonth : ''+currentMonth;
+    },
+    changeToToday : todayPosition => {
       currentYear = year;
       currentMonth = month;
       firstYear = year;
@@ -671,23 +534,24 @@ const calendar = (() => {
       initCalendar();
       changeNextMonth();
       changePrevMonth();
-      $calendar.scrollTo(0, todayPosition.top - $calendar.clientHeight / 2);
-      $calendarYear.textContent = year + '';
-      $calendarMonth.textContent = month + '';
+      $lastStandard = document.querySelector('.today'); 
+      $calendar.scrollTo(0, todayPosition.top - ($calendar.clientHeight / 2));
+      $calendarYear.textContent = year+"";
+      $calendarMonth.textContent = month < 10 ? '0'+month : ''+month;
     },
-    scroll: io => {
-      throttling.throttle(() => {
-        if ($calendar.scrollTop < 1) {
-          changePrevMonth();
-          $calendar.scrollTop = 640;
-          const $standards = document.querySelectorAll('.standard');
-          [...$standards].forEach($standard => {
-            io.observe($standard);
-          });
+    scroll: io =>{
+      throttling.throttle(()=>{
+        if($calendar.scrollTop < 1){
+            changePrevMonth();
+            $calendar.scrollTop = 640;
+            const $standards = document.querySelectorAll('.standard');
+            [...$standards].forEach($standard => {
+                io.observe($standard);
+            })
         }
         if (
           $calendar.scrollHeight - Math.ceil($calendar.scrollTop) <=
-          $calendar.clientHeight
+          $calendar.clientHeight-1
         ) {
           changeNextMonth();
           const $standards = document.querySelectorAll('.standard');
@@ -695,9 +559,9 @@ const calendar = (() => {
             io.observe($standard);
           });
         }
-      }, 500);
-    }
-  };
+    }, 500);
+  }
+}
 })();
 // 코드 실행 부분
 calendar.renderCalendar();
@@ -710,9 +574,7 @@ const todayPosition = document.querySelector('.today').getBoundingClientRect();
 
 calendar.changeToToday(todayPosition);
 $calendar.addEventListener('scroll', () => calendar.scroll(io));
-$todayBtn.addEventListener('click', () =>
-  calendar.changeToToday(todayPosition)
-);
+$todayBtn.addEventListener('click', () => calendar.changeToToday(todayPosition));
 
 /**
  * 모달 창 관련 소스 코드
@@ -836,6 +698,7 @@ document
       dropdownCategoryMain.close();
 
       currentCategory = $dropdownOption.dataset.cateId;
-      calendar.renderCalendar();
+      calendar.renderCalendarDateWithSavedDate();
+
     }
   });
