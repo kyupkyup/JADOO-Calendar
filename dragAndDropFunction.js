@@ -21,7 +21,7 @@ $calendarDates.addEventListener('mousedown', e => {
       }
     );
 
-    const mouseMoveEventFunction = e => {
+    const mouseMoveEvent = e => {
       draggable.style.transform = `translate3d(${
         e.clientX - initialMousePos.x
       }px, ${e.clientY - initialMousePos.y}px, 0)`;
@@ -96,10 +96,7 @@ $calendarDates.addEventListener('mousedown', e => {
             }
           );
 
-          $calendarDates.removeEventListener(
-            'mousemove',
-            mouseMoveEventFunction
-          );
+          $calendarDates.removeEventListener('mousemove', mouseMoveEvent);
           $calendarDates.removeEventListener(
             'mouseover',
             mouseEventInMouseDownEvnet.mouseOverEvent
@@ -120,7 +117,7 @@ $calendarDates.addEventListener('mousedown', e => {
       };
     })();
 
-    $calendarDates.addEventListener('mousemove', mouseMoveEventFunction);
+    $calendarDates.addEventListener('mousemove', mouseMoveEvent);
     $calendarDates.addEventListener(
       'mouseover',
       mouseEventInMouseDownEvnet.mouseOverEvent
