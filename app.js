@@ -7,75 +7,76 @@ const ITEM_TYPE = [
  * 요소 더미 데이터
  *
  */
-let data = [
+let data = [];
+data = [
   {
     id: 1,
-    type: 'todo',
-    category: '네카',
+    type: '1',
+    category: '1',
     date: '2021-06-23',
     content: '하이',
     order: 1
   },
   {
     id: 2,
-    type: 'todo',
-    category: '네카',
+    type: '2',
+    category: '2',
     date: '2021-06-24',
     content: '하이',
     order: 1
   },
   {
     id: 3,
-    type: 'todo',
-    category: '네카',
+    type: '2',
+    category: '3',
     date: '2021-06-25',
     content: '하이',
     order: 1
   },
   {
     id: 4,
-    type: 'text',
-    category: '네카',
+    type: '1',
+    category: '2',
     date: '2021-06-23',
     content: '하이',
     order: 2
   },
   {
     id: 5,
-    type: 'todo',
-    category: '네카',
+    type: '1',
+    category: '1',
     date: '2021-06-23',
     content: '하이',
     order: 1
   },
   {
     id: 6,
-    type: 'todo',
-    category: '네카',
+    type: '2',
+    category: '2',
     date: '2021-09-24',
     content: '하이 9월 24일',
     order: 1
   },
   {
     id: 7,
-    type: 'todo',
-    category: '네카',
+    type: '1',
+    category: '1',
     date: '2021-07-25',
     content: '하이 7월 25일',
     order: 1
   },
   {
     id: 8,
-    type: 'text',
-    category: '네카',
+    type: '2',
+    category: '3',
     date: '2021-08-23',
     content: '하이 8월 23일',
     order: 2
   },
   {
-    id: 8,
-    type: 'text',
-    category: '네카',
+    id: 9,
+    type: '1',
+    category: '1',
     date: '2021-06-27',
     content: '하이 8월 23일',
     order: 2
@@ -191,6 +192,41 @@ const categoryUtil = (() => {
         .join('') +
       '</ul>';
 
+    // 아이템편집창 카테고리 변경
+    document.querySelector('.modal-edit .dropdown-category').innerHTML =
+      `
+      <span id="modalEditCategoryLabel" class="modal-input-label">카테고리 <span class="a11y-hidden">선택</span></span>
+      <button
+        type="button"
+        id="modalEditCategoryBtn"
+        class="dropdown-toggle"
+        name="itemCategory"
+        value="${categories[0].id}"
+        aria-labelledby="modalEditCategoryLabel modalEditCategoryBtn"
+        aria-haspopup="listbox"
+      >
+        ${categories[0].name}
+      </button>
+      <ul
+        class="dropdown-menu"
+        tabindex="-1"
+        role="listbox"
+        aria-labelledby="modalEditCategoryLabel"
+    >` +
+      categories
+        .map(
+          category =>
+            `
+              <li class="dropdown-item" role="option">
+                <button type="button" value="${category.id}" class="dropdown-option">
+                  ${category.name}
+                </button>
+              </li>
+            `
+        )
+        .join('') +
+      '</ul>';
+
     const dropdownCategoryModalAdd = (() => {
       const $dropdown = document.querySelector(
         '#modalAddCategoryBtn + .dropdown-menu'
@@ -205,14 +241,31 @@ const categoryUtil = (() => {
       };
     })();
 
-    const $categoryBtn = document.getElementById('modalAddCategoryBtn');
+    const dropdownCategoryModalEdit = (() => {
+      const $dropdown = document.querySelector(
+        '#modalEditCategoryBtn + .dropdown-menu'
+      );
+      return {
+        toggle() {
+          $dropdown.classList.toggle('--show');
+        },
+        close() {
+          $dropdown.classList.remove('--show');
+        }
+      };
+    })();
+
+    const $modalAddCategoryBtn = document.getElementById('modalAddCategoryBtn');
+    const $modalEditCategoryBtn = document.getElementById(
+      'modalEditCategoryBtn'
+    );
 
     document
       .querySelector('.modal-add .dropdown-category')
       .addEventListener('click', e => {
         e.stopPropagation();
 
-        const $modalAddCategoryBtn = closest(
+        const $targetCategoryBtn = closest(
           e.target,
           'dropdown-toggle',
           'dropdown-category'
@@ -223,15 +276,45 @@ const categoryUtil = (() => {
           'dropdown-category'
         );
 
-        if ($modalAddCategoryBtn) {
+        if ($targetCategoryBtn) {
           dropdownCategoryModalAdd.toggle();
           return;
         }
 
         if ($modalAddCategoryOption) {
-          $categoryBtn.textContent = $modalAddCategoryOption.textContent.trim();
-          $categoryBtn.value = $modalAddCategoryOption.value;
+          $modalAddCategoryBtn.textContent =
+            $modalAddCategoryOption.textContent.trim();
+          $modalAddCategoryBtn.value = $modalAddCategoryOption.value;
           dropdownCategoryModalAdd.close();
+        }
+      });
+
+    document
+      .querySelector('.modal-edit .dropdown-category')
+      .addEventListener('click', e => {
+        e.stopPropagation();
+
+        const $targetCategoryBtn = closest(
+          e.target,
+          'dropdown-toggle',
+          'dropdown-category'
+        );
+        const $modalEditCategoryOption = closest(
+          e.target,
+          'dropdown-option',
+          'dropdown-category'
+        );
+
+        if ($targetCategoryBtn) {
+          dropdownCategoryModalEdit.toggle();
+          return;
+        }
+
+        if ($modalEditCategoryOption) {
+          $modalEditCategoryBtn.textContent =
+            $modalEditCategoryOption.textContent.trim();
+          $modalEditCategoryBtn.value = $modalEditCategoryOption.value;
+          dropdownCategoryModalEdit.close();
         }
       });
   };
@@ -245,6 +328,9 @@ const categoryUtil = (() => {
     },
     getFirstCategory() {
       return categories[0];
+    },
+    getCategoryById(id) {
+      return categories.filter(category => category.id === +id)[0];
     },
     fetch(data) {
       categories = data;
@@ -346,6 +432,38 @@ document.addEventListener('DOMContentLoaded', () => {
     ).join('') +
     '</ul>';
 
+  document.querySelector('.modal-edit .dropdown-type').innerHTML =
+    `
+      <span id="modalEditTypeLabel" class="modal-input-label">타입 <span class="a11y-hidden">선택</span></span>
+      <button
+        type="button"
+        id="modalEditTypeBtn"
+        class="dropdown-toggle"
+        name="itemType"
+        value="${ITEM_TYPE[0].id}"
+        aria-labelledby="modalEditTypeLabel modalEditTypeBtn"
+        aria-haspopup="listbox"
+      >
+        ${ITEM_TYPE[0].name}
+      </button>
+      <ul
+        class="dropdown-menu"
+        tabindex="-1"
+        role="listbox"
+        aria-labelledby="modalEditTypeLabel"
+    >` +
+    ITEM_TYPE.map(
+      type =>
+        `
+        <li class="dropdown-item" role="option">
+          <button type="button" value="${type.id}" class="dropdown-option">
+            ${type.name}
+          </button>
+        </li>
+      `
+    ).join('') +
+    '</ul>';
+
   const dropdownTypeModalAdd = (() => {
     const $dropdown = document.querySelector(
       '#modalAddTypeBtn + .dropdown-menu'
@@ -361,11 +479,32 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   })();
 
+  const dropdownTypeModalEdit = (() => {
+    const $dropdown = document.querySelector(
+      '#modalEditTypeBtn + .dropdown-menu'
+    );
+
+    return {
+      toggle() {
+        $dropdown.classList.toggle('--show');
+      },
+      close() {
+        $dropdown.classList.remove('--show');
+      }
+    };
+  })();
+
   const $modalAddTypeBtn = document.getElementById('modalAddTypeBtn');
+  const $modalEditTypeBtn = document.getElementById('modalEditTypeBtn');
 
   $modalAddTypeBtn.addEventListener('click', e => {
     e.stopPropagation();
     dropdownTypeModalAdd.toggle();
+  });
+
+  $modalEditTypeBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    dropdownTypeModalEdit.toggle();
   });
 
   document
@@ -381,8 +520,29 @@ document.addEventListener('DOMContentLoaded', () => {
       dropdownTypeModalAdd.close();
     });
 
+  document
+    .querySelector('#modalEditTypeBtn + .dropdown-menu')
+    .addEventListener('click', e => {
+      e.stopPropagation();
+
+      const $dropdownOption = e.target;
+      if (!$dropdownOption.classList.contains('dropdown-option')) return;
+
+      $modalEditTypeBtn.textContent = $dropdownOption.textContent.trim();
+      $modalEditTypeBtn.value = $dropdownOption.value;
+      dropdownTypeModalEdit.close();
+    });
+
   document.querySelector('.modal-add').addEventListener('click', () => {
     [...document.querySelectorAll('.modal-add .dropdown-menu')].forEach(
+      $dropdown => {
+        $dropdown.classList.remove('--show');
+      }
+    );
+  });
+
+  document.querySelector('.modal-edit').addEventListener('click', () => {
+    [...document.querySelectorAll('.modal-edit .dropdown-menu')].forEach(
       $dropdown => {
         $dropdown.classList.remove('--show');
       }
@@ -393,6 +553,12 @@ document.addEventListener('DOMContentLoaded', () => {
     modalAdd.close();
     modalEdit.close();
     [...document.querySelectorAll('.modal-add .dropdown-menu')].forEach(
+      $dropdown => {
+        $dropdown.classList.remove('--show');
+      }
+    );
+
+    [...document.querySelectorAll('.modal-edit .dropdown-menu')].forEach(
       $dropdown => {
         $dropdown.classList.remove('--show');
       }
@@ -505,25 +671,35 @@ const modalEdit = (() => {
   let isActive = false;
   const $modal = document.querySelector('.modal-edit');
   const $modalDim = document.querySelector('.modal-dim');
-  const $titleYear = document.querySelector('.modal-edit .month');
-  const $titleMonth = document.querySelector('.modal-edit .date');
-  const $itemDate = document.querySelector('.modal-edit .modal-input-date');
-  const $itemTextArea = document.querySelector('.modal-edit .modal-input-txt');
-  const $itemId = document.querySelector('.modal-edit .id');
+  const $titleYear = $modal.querySelector('.month');
+  const $titleMonth = $modal.querySelector('.date');
+  const $itemDate = $modal.querySelector('.modal-input-date');
+  const $itemTextArea = $modal.querySelector('.modal-input-txt');
+  const $itemId = $modal.querySelector('.modal-input-id');
 
   return {
-    toggle(itemDate, content, itemId) {
+    toggle({ id, date, category: categoryId, type: typeId, content }) {
       isActive = !isActive;
       $modal.classList.toggle('--show', isActive);
       $modalDim.classList.toggle('--show', isActive);
       document.body.classList.toggle('modal-open', isActive);
 
       if (!isActive) return;
-      $itemId.value = itemId;
-      $titleYear.textContent = itemDate.slice(5, 7);
-      $titleMonth.textContent = itemDate.slice(8, 10);
-      $itemDate.value = itemDate;
+      $itemId.value = id;
+      $titleYear.textContent = date.slice(5, 7);
+      $titleMonth.textContent = date.slice(8, 10);
+      $itemDate.value = date;
       $itemTextArea.value = content;
+
+      const $categoryBtn = document.getElementById('modalEditCategoryBtn');
+      const $typeBtn = document.getElementById('modalEditTypeBtn');
+
+      $categoryBtn.value = categoryId;
+      $categoryBtn.textContent = categoryUtil.getCategoryById(categoryId).name;
+      $typeBtn.value = typeId;
+      $typeBtn.textContent = ITEM_TYPE.filter(
+        type => type.id === +typeId
+      )[0].name;
     },
     close() {
       isActive = false;
@@ -546,57 +722,7 @@ document
     modalEdit.close();
   });
 
-document.querySelector('.calendar-dates').addEventListener('click', e => {
-  // -------------------Hover Function-----------------------
-  const $selectedControlBtn = closest(
-    e.target,
-    'item-control-btn',
-    'calendar-dates'
-  );
-  if ($selectedControlBtn) {
-    $selectedControlBtn.nextElementSibling.classList.toggle('--show');
-    return;
-  }
-  // --------------------------------------------------------
-  const $selectedAddBtn = closest(e.target, 'item-add-btn', 'calendar-dates');
-  if ($selectedAddBtn) {
-    const itemDate = $selectedAddBtn.parentElement.dataset.date;
-    modalAdd.toggle(itemDate);
-  }
-
-  const $selectedModifyBtn = closest(
-    e.target,
-    'item-edit-btn',
-    'calendar-dates'
-  );
-  if ($selectedModifyBtn) {
-    const itemDate =
-      $selectedModifyBtn.parentElement.parentElement.parentElement.parentElement
-        .dataset.date;
-    const content =
-      $selectedModifyBtn.parentElement.parentElement
-        .querySelector('label')
-        ?.textContent.trim() ??
-      $selectedModifyBtn.parentElement.parentElement
-        .querySelector('p')
-        ?.textContent.trim();
-    const itemId = $selectedModifyBtn.parentElement.parentElement.dataset.id;
-
-    modalEdit.toggle(itemDate, content, itemId);
-  }
-  const $selectedDeleteBtn = closest(
-    e.target,
-    'item-delete-btn',
-    'calendar-dates'
-  );
-  if ($selectedDeleteBtn) {
-    const itemId = $selectedDeleteBtn.parentElement.parentElement.dataset.id;
-    const $parentNode =
-      $selectedDeleteBtn.parentElement.parentElement.parentElement;
-    deleteDataArray(itemId);
-    deleteDataDOM(itemId, $parentNode);
-  }
-});
+let nextDataId = 21;
 
 // 아이템 추가
 document.querySelector('.modal-add').addEventListener('submit', e => {
@@ -611,6 +737,8 @@ document.querySelector('.modal-add').addEventListener('submit', e => {
 
   addDataArray(newItem);
   addDataDomTree(newItem);
+  nextDataId += 1;
+
   modalAdd.close();
   modalAdd.reset();
 });
@@ -622,7 +750,7 @@ document.querySelector('.modal-edit').addEventListener('submit', e => {
   const editItem = {
     id: e.currentTarget.itemId.value,
     date: e.currentTarget.itemDate.value,
-    category: e.currentTarget.itemCategory.value,
+    // category: e.currentTarget.itemCategory.value,
     type: e.currentTarget.itemType.value,
     content: e.currentTarget.itemContent.value
   };
@@ -630,4 +758,51 @@ document.querySelector('.modal-edit').addEventListener('submit', e => {
   modifyDataArray(editItem);
   modifyDataDOM(editItem);
   modalEdit.close();
+});
+
+
+document.querySelector('.calendar-dates').addEventListener('click', e => {
+  const $selectedControlBtn = closest(
+    e.target,
+    'item-control-btn',
+    'calendar-dates'
+  );
+  const $selectedAddBtn = closest(e.target, 'item-add-btn', 'calendar-dates');
+  const $selectedModifyBtn = closest(
+    e.target,
+    'item-edit-btn',
+    'calendar-dates'
+  );
+  const $selectedDeleteBtn = closest(
+    e.target,
+    'item-delete-btn',
+    'calendar-dates'
+  );
+
+  if ($selectedControlBtn) {
+    $selectedControlBtn.nextElementSibling.classList.toggle('--show');
+    return;
+  }
+
+  if ($selectedAddBtn) {
+    const itemDate = $selectedAddBtn.parentElement.dataset.date;
+    modalAdd.toggle(itemDate);
+    return;
+  }
+
+  if ($selectedModifyBtn) {
+    const selectedId =
+      $selectedModifyBtn.parentElement.parentElement.dataset.id;
+    const modifyItem = data.filter(item => item.id === +selectedId)[0];
+    modalEdit.toggle(modifyItem);
+    return;
+  }
+
+  if ($selectedDeleteBtn) {
+    const itemId = $selectedDeleteBtn.parentElement.parentElement.dataset.id;
+    const $parentNode =
+      $selectedDeleteBtn.parentElement.parentElement.parentElement;
+    deleteDataArray(itemId);
+    deleteDataDOM(itemId, $parentNode);
+  }
 });
