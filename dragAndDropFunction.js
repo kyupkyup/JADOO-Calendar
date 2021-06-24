@@ -111,9 +111,31 @@ $calendarDates.addEventListener('mousedown', e => {
 
         if (!$nextElement) {
           $container.appendChild(draggable);
+          const editItem = {
+            id: draggable.dataset.id,
+            date: $container.parentElement.dataset.date,
+            order:
+              $container.lastElementChild === draggable
+                ? null
+                : data.filter(
+                    item =>
+                      item.category === currentCategory &&
+                      item.date === $container.parentElement.dataset.date
+                  ).length + 1
+          };
+          modifyDataArray(editItem);
+
           return;
         }
+
         $container.insertBefore(draggable, $nextElement);
+        [...$container.children].forEach(($li, idx) => {
+          data.find(item => item.id === +$li.dataset.id).order = idx + 1;
+        });
+        data.find(item => item.id === +draggable.dataset.id).date =
+          $container.parentElement.dataset.date;
+
+        // modifyDataArray(editItem);
       }
     };
   })();
