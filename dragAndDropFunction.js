@@ -22,19 +22,18 @@ $calendarDates.addEventListener('mousedown', e => {
     }
   );
 
-  const mouseMoveEvent = e => {
-    draggable.style.transform = `translate3d(${
-      e.clientX - initialMousePos.x
-    }px, ${e.clientY - initialMousePos.y}px, 0)`;
-  };
-
-  const mouseEventInMouseDownEvent = (() => {
+  const eventFunctions = (() => {
     let $container = null;
     let $prevContainer = null;
     let $nextElement = null;
     let $prevNextElement = null;
 
     return {
+      mouseMoveEvent(e) {
+        draggable.style.transform = `translate3d(${
+          e.clientX - initialMousePos.x
+        }px, ${e.clientY - initialMousePos.y}px, 0)`;
+      },
       mouseOverEvent(e) {
         if ($prevNextElement) $prevNextElement.style.border = 'none';
         if ($prevContainer) $prevContainer.style.border = 'none';
@@ -97,15 +96,15 @@ $calendarDates.addEventListener('mousedown', e => {
           }
         );
 
-        $calendarDates.removeEventListener('mousemove', mouseMoveEvent);
+        $calendarDates.removeEventListener(
+          'mousemove',
+          eventFunctions.mouseMoveEvent
+        );
         $calendarDates.removeEventListener(
           'mouseover',
-          mouseEventInMouseDownEvent.mouseOverEvent
+          eventFunctions.mouseOverEvent
         );
-        document.removeEventListener(
-          'mouseup',
-          mouseEventInMouseDownEvent.mouseUpEvent
-        );
+        document.removeEventListener('mouseup', eventFunctions.mouseUpEvent);
 
         if (!$container) return;
 
@@ -134,17 +133,12 @@ $calendarDates.addEventListener('mousedown', e => {
         });
         data.find(item => item.id === +draggable.dataset.id).date =
           $container.parentElement.dataset.date;
-
-        // modifyDataArray(editItem);
       }
     };
   })();
 
-  $calendarDates.addEventListener('mousemove', mouseMoveEvent);
-  $calendarDates.addEventListener(
-    'mouseover',
-    mouseEventInMouseDownEvent.mouseOverEvent
-  );
-  document.addEventListener('mouseup', mouseEventInMouseDownEvent.mouseUpEvent);
+  $calendarDates.addEventListener('mousemove', eventFunctions.mouseMoveEvent);
+  $calendarDates.addEventListener('mouseover', eventFunctions.mouseOverEvent);
+  document.addEventListener('mouseup', eventFunctions.mouseUpEvent);
 });
 // ----------------------------------------------------------------
