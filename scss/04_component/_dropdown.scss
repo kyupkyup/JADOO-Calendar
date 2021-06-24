@@ -1,6 +1,5 @@
 .dropdown {
   position: relative;
-  z-index: 1;
   width: 220px;
   margin: 0 auto 8px;
 
@@ -47,14 +46,28 @@
     }
   }
 
-  &-item {
+  &-option,
+  &-option-icon {
     margin: 0 2px;
+    padding: 0 14px;
     width: calc(100% - 4px);
-    padding: 0 4px 0 10px;
     height: 44px;
     line-height: 44px;
     text-align: inherit;
     font-weight: 400;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $lightGray;
+    }
+
+    &.--selected {
+      color: $primaryPlum;
+    }
+  }
+
+  &-option-icon {
+    padding: 0 4px 0 10px;
   }
 
   &-item-input {
@@ -73,20 +86,9 @@
     }
   }
 
-  &-option {
-    cursor: pointer;
-
-    &:hover {
-      background-color: $lightGray;
-    }
-
-    &.--selected {
-      color: $primaryPlum;
-    }
-  }
-
   &-add {
     margin-top: 10px;
+    padding: 0 4px 0 10px;
   }
 }
 
