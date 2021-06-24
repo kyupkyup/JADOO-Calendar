@@ -13,8 +13,8 @@ $calendarDates.addEventListener('mousedown', e => {
   draggable.classList.add('dragging');
 
   e.target.style['pointer-events'] = 'none';
-  e.target.parentNode.style['pointer-events'] = 'none';
-  e.target.parentNode.parentNode.style['pointer-events'] = 'none';
+  e.target.parentElement.style['pointer-events'] = 'none';
+  e.target.parentElement.parentElement.style['pointer-events'] = 'none';
 
   [...document.querySelectorAll('.item-control-btn')].forEach(
     $itemControlBtn => {
@@ -88,8 +88,8 @@ $calendarDates.addEventListener('mousedown', e => {
         if ($prevContainer) $prevContainer.style.border = 'none';
 
         e.target.style['pointer-events'] = 'auto';
-        e.target.parentNode.style['pointer-events'] = 'auto';
-        e.target.parentNode.parentNode.style['pointer-events'] = 'auto';
+        e.target.parentElement.style['pointer-events'] = 'auto';
+        e.target.parentElement.parentElement.style['pointer-events'] = 'auto';
 
         [...document.querySelectorAll('.item-control-btn')].forEach(
           $itemControlBtn => {
