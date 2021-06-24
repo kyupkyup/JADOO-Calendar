@@ -554,7 +554,9 @@ const addDataArray = ({ date, category, type, content }) => {
       category,
       date,
       content,
-      order: data.filter(item => item.date === date).length + 1
+      order:
+        data.filter(item => item.date === date && item.category === category)
+          .length + 1
     }
   ];
 };
@@ -599,9 +601,11 @@ const deleteDataDOM = (itemId, $parentNode) => {
   $parentNode.removeChild($nodeWillDeleted);
 };
 
-const modifyDataArray = ({ id, content }) => {
+const modifyDataArray = ({ id, date, content, order }) => {
   const modifiedData = data.filter(item => item.id === +id)[0];
-  modifiedData.content = content;
+  if (date) modifiedData.date = date;
+  if (content) modifiedData.content = content;
+  if (order) modifiedData.order = order;
 };
 
 const modifyDataDOM = ({ id, date, type, content }) => {
