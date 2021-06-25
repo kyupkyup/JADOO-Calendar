@@ -3,6 +3,7 @@ const ITEM_TYPE = [
   { id: 2, name: '📃 글' }
 ];
 
+// state
 let currentCategory = '1';
 let nextDataId = 31;
 
@@ -237,26 +238,20 @@ let data = [
     date: '2021-06-17',
     content: 'JS UI 짝코딩',
     order: 1
+  },
+  {
+    id: 29,
+    type: '1',
+    category: '1',
+    date: '2021-06-25',
+    content: '자두 발표!! 😎😎😎',
+    order: 1
   }
 ];
 
 const $calendarDates = document.querySelector('.calendar');
-  
-document.documentElement.style.setProperty(
-  '--scroll-width',
-  $calendarDates.offsetWidth - $calendarDates.clientWidth + 'px'
-);
-
-
-document.documentElement.style.setProperty(
-  '--scroll-width',
-  $calendarDates.offsetWidth - $calendarDates.clientWidth + 'px'
-);
-
-document.documentElement.style.setProperty(
-  '--scroll-width',
-  $calendarDates.offsetWidth - $calendarDates.clientWidth + 'px'
-);
+const $modalAdd = document.querySelector('.modal-add');
+const $modalEdit = document.querySelector('.modal-edit');
 
 // closest 커스텀 함수
 const closest = ($startElem, targetClass, endClass) => {
@@ -268,6 +263,385 @@ const closest = ($startElem, targetClass, endClass) => {
     elem = elem.parentNode;
   }
   return elem;
+};
+
+// 카테고리
+const categoryUtil = (() => {
+  let nextId = 1;
+  let categories = [];
+
+  const $categoryMain = document.querySelector('#categoryMain .dropdown-menu');
+  const render = () => {
+    // 메인화면의 카테고리 변경
+    $categoryMain.innerHTML =
+      categories
+        .map(
+          category =>
+            `
+              <li
+                id="cateMain${category.id}"
+                class="dropdown-item dropdown-option-icon ${
+                  category.selected ? '--selected' : ''
+                }"
+                role="option"
+                data-cate-name="${category.name}"
+                data-cate-id=${category.id}
+              >
+                <input
+                  type="text"
+                  value="${category.name}"
+                  tabindex="-1"
+                  readonly
+                  class="dropdown-item-input"
+                />
+                <button class="category-delete-btn" aria-label="삭제">
+                  <span class="icon icon-delete-gray"></span>
+                </button>
+              </li>
+            `
+        )
+        .join('') +
+      `
+        <li class="dropdown-item dropdown-add">
+          <label for="newCategoryMain" class="a11y-hidden">새로운 카테고리명</label>
+          <input
+            type="text"
+            id="newCategoryMain"
+            class="category-add-input"
+            placeholder="카테고리명 입력"
+          />
+          <button class="category-add-btn" aria-label="추가">
+            <span class="icon icon-add-gray"></span>
+          </button>
+        </li>
+      `;
+
+    document.getElementById('newCategoryMain').addEventListener('keyup', e => {
+      if (e.key !== 'Enter') return;
+
+      const cateName = e.target.value.trim();
+      if (!cateName) return;
+      categoryUtil.add(cateName);
+      cateName.value = '';
+      document.getElementById('newCategoryMain').focus();
+    });
+
+    // 아이템추가창 카테고리 변경
+    document.querySelector('.modal-add .dropdown-category').innerHTML =
+      `
+      <span id="modalAddCategoryLabel" class="modal-input-label">카테고리 <span class="a11y-hidden">선택</span></span>
+      <button
+        type="button"
+        id="modalAddCategoryBtn"
+        class="dropdown-toggle"
+        name="itemCategory"
+        value="${categories[0].id}"
+        aria-labelledby="modalAddCategoryLabel modalAddCategoryBtn"
+        aria-haspopup="listbox"
+      >
+        ${categories[0].name}
+      </button>
+      <ul
+        class="dropdown-menu"
+        tabindex="-1"
+        role="listbox"
+        aria-labelledby="modalAddCategoryLabel"
+    >` +
+      categories
+        .map(
+          category =>
+            `
+              <li class="dropdown-item" role="option">
+                <button type="button" value="${category.id}" class="dropdown-option">
+                  ${category.name}
+                </button>
+              </li>
+            `
+        )
+        .join('') +
+      '</ul>';
+
+    // 아이템편집창 카테고리 변경
+    document.querySelector('.modal-edit .dropdown-category').innerHTML =
+      `
+      <span id="modalEditCategoryLabel" class="modal-input-label">카테고리 <span class="a11y-hidden">선택</span></span>
+      <button
+        type="button"
+        id="modalEditCategoryBtn"
+        class="dropdown-toggle --disabled"
+        name="itemCategory"
+        value="${categories[0].id}"
+        aria-labelledby="modalEditCategoryLabel modalEditCategoryBtn"
+        aria-haspopup="listbox"
+      >
+        ${categories[0].name}
+      </button>
+      <ul
+        class="dropdown-menu"
+        tabindex="-1"
+        role="listbox"
+        aria-labelledby="modalEditCategoryLabel"
+    >` +
+      categories
+        .map(
+          category =>
+            `
+              <li class="dropdown-item" role="option">
+                <button type="button" value="${category.id}" class="dropdown-option">
+                  ${category.name}
+                </button>
+              </li>
+            `
+        )
+        .join('') +
+      '</ul>';
+
+    const dropdownCategoryModalAdd = (() => {
+      const $dropdown = document.querySelector(
+        '#modalAddCategoryBtn + .dropdown-menu'
+      );
+      return {
+        toggle() {
+          $dropdown.classList.toggle('--show');
+        },
+        close() {
+          $dropdown.classList.remove('--show');
+        }
+      };
+    })();
+
+    const $modalAddCategoryBtn = document.getElementById('modalAddCategoryBtn');
+
+    document
+      .querySelector('.modal-add .dropdown-category')
+      .addEventListener('click', e => {
+        e.stopPropagation();
+
+        const $targetCategoryBtn = closest(
+          e.target,
+          'dropdown-toggle',
+          'dropdown-category'
+        );
+        const $modalAddCategoryOption = closest(
+          e.target,
+          'dropdown-option',
+          'dropdown-category'
+        );
+
+        if ($targetCategoryBtn) {
+          document
+            .querySelector('#modalAddTypeBtn + .dropdown-menu')
+            .classList.remove('--show');
+          dropdownCategoryModalAdd.toggle();
+          return;
+        }
+
+        if ($modalAddCategoryOption) {
+          $modalAddCategoryBtn.textContent =
+            $modalAddCategoryOption.textContent.trim();
+          $modalAddCategoryBtn.value = $modalAddCategoryOption.value;
+          dropdownCategoryModalAdd.close();
+        }
+      });
+  };
+
+  return {
+    chkLength() {
+      return categories.length;
+    },
+    getSelectedName() {
+      return categories.filter(category => category.selected)[0].name;
+    },
+    getFirstCategory() {
+      return categories[0];
+    },
+    getCategoryById(id) {
+      return categories.filter(category => category.id === +id)[0];
+    },
+    fetch(data) {
+      categories = data;
+      nextId = data.length + 1;
+      render();
+    },
+    add(cateName) {
+      categories = [
+        ...categories,
+        {
+          id: nextId,
+          name: cateName,
+          selected: false
+        }
+      ];
+      nextId += 1;
+      render();
+    },
+    remove(cateId) {
+      let chgSelectedIdx = 0;
+      let removeSelected = false;
+
+      categories.forEach((category, idx, { length }) => {
+        if (category.id === cateId) {
+          if (category.selected) removeSelected = true;
+          chgSelectedIdx = idx === length - 1 ? idx - 1 : idx + 1;
+        }
+      });
+
+      categories = removeSelected
+        ? categories
+            .map((category, idx) => {
+              if (idx === chgSelectedIdx) {
+                return { ...category, selected: true };
+              }
+              return category;
+            })
+            .filter(category => category.id !== cateId)
+        : categories.filter(category => category.id !== cateId);
+      render();
+    },
+    select(cateId) {
+      categories = categories.map(category => {
+        if (category.id === cateId) {
+          return { ...category, selected: true };
+        }
+        if (category.selected) {
+          return { ...category, selected: false };
+        }
+        return category;
+      });
+      render();
+    }
+  };
+})();
+
+const dropdownCategoryMain = (() => {
+  const $dropdown = document.querySelector('#categoryMain .dropdown-menu');
+  return {
+    toggle() {
+      $dropdown.classList.toggle('--show');
+    },
+    close() {
+      $dropdown.classList.remove('--show');
+    }
+  };
+})();
+
+// 모달
+const modalAdd = (() => {
+  let isActive = false;
+  let selectedDate;
+
+  const $modal = document.querySelector('.modal-add');
+  const $modalDim = document.querySelector('.modal-dim');
+  const $titleYear = $modal.querySelector('.month');
+  const $titleMonth = $modal.querySelector('.date');
+  const $itemDate = $modal.querySelector('.modal-input-date');
+  const $itemContent = $modal.querySelector('.modal-input-txt');
+
+  return {
+    isActive() {
+      return isActive;
+    },
+    toggle(itemDate) {
+      isActive = !isActive;
+      $modal.classList.toggle('--show', isActive);
+      $modalDim.classList.toggle('--show', isActive);
+      document.body.classList.toggle('modal-open', isActive);
+
+      if (!isActive) return;
+      selectedDate = itemDate;
+      const $categoryBtn = document.getElementById('modalAddCategoryBtn');
+      $categoryBtn.value = currentCategory;
+      $categoryBtn.textContent =
+        categoryUtil.getCategoryById(currentCategory).name;
+
+      $titleYear.textContent = itemDate.slice(5, 7);
+      $titleMonth.textContent = itemDate.slice(8, 10);
+      $itemDate.value = itemDate;
+      $itemContent.focus();
+    },
+    close() {
+      isActive = false;
+      $modal.classList.remove('--show');
+      $modalDim.classList.remove('--show');
+      document.body.classList.remove('modal-open');
+      document.getElementById(selectedDate.replaceAll('-', '')).focus();
+    },
+    reset() {
+      const $itemTypeBtn = $modal.querySelector('#modalAddTypeBtn');
+      $itemTypeBtn.value = ITEM_TYPE[0].id;
+      $itemTypeBtn.textContent = ITEM_TYPE[0].name;
+      $itemContent.value = '';
+    }
+  };
+})();
+
+const modalEdit = (() => {
+  let isActive = false;
+  let selectedDate;
+
+  const $modal = document.querySelector('.modal-edit');
+  const $modalDim = document.querySelector('.modal-dim');
+  const $titleYear = $modal.querySelector('.month');
+  const $titleMonth = $modal.querySelector('.date');
+  const $itemDate = $modal.querySelector('.modal-input-date');
+  const $itemContent = $modal.querySelector('.modal-input-txt');
+  const $itemId = $modal.querySelector('.modal-input-id');
+
+  return {
+    isActive() {
+      return isActive;
+    },
+    toggle({ id, date, category: categoryId, type: typeId, content }) {
+      isActive = !isActive;
+      $modal.classList.toggle('--show', isActive);
+      $modalDim.classList.toggle('--show', isActive);
+      document.body.classList.toggle('modal-open', isActive);
+
+      if (!isActive) return;
+      selectedDate = date;
+
+      $itemId.value = id;
+      $titleYear.textContent = date.slice(5, 7);
+      $titleMonth.textContent = date.slice(8, 10);
+      $itemDate.value = date;
+      $itemContent.value = content;
+
+      const $categoryBtn = document.getElementById('modalEditCategoryBtn');
+      const $typeBtn = document.getElementById('modalEditTypeBtn');
+
+      $categoryBtn.value = categoryId;
+      $categoryBtn.textContent = categoryUtil.getCategoryById(categoryId).name;
+      $typeBtn.value = typeId;
+      $typeBtn.textContent = ITEM_TYPE.filter(
+        type => type.id === +typeId
+      )[0].name;
+
+      $itemContent.focus();
+    },
+    close() {
+      isActive = false;
+      $modal.classList.remove('--show');
+      $modalDim.classList.remove('--show');
+      document.body.classList.remove('modal-open');
+      document.getElementById(selectedDate.replaceAll('-', '')).focus();
+    }
+  };
+})();
+
+const trapModalFocus = (e, $firstFocusElem, $lastFocusElem) => {
+  if (e.key !== 'Tab') return;
+
+  // shift + tab
+  if (e.shiftKey && document.activeElement === $firstFocusElem) {
+    $lastFocusElem.focus();
+    e.preventDefault();
+    return;
+  }
+
+  if (document.activeElement === $lastFocusElem) {
+    $firstFocusElem.focus();
+    e.preventDefault();
+  }
 };
 
 // 달력
@@ -282,11 +656,13 @@ const getCustomDate = (year, month) => {
   return { firstDate, firstDay, lastDate, lastDay, lastMonthDate };
 };
 
-const convertDateToString = (year, month, date) => {
+const convertDateToString = (year, month, date, hasDash = true) => {
   const newYear = '' + year;
   const newMonth = month < 10 ? '0' + month : '' + month;
   const newDate = date < 10 ? '0' + date : '' + date;
-  return newYear + '-' + newMonth + '-' + newDate;
+
+  if (hasDash) return newYear + '-' + newMonth + '-' + newDate;
+  return newYear + newMonth + newDate;
 };
 
 const calendar = (() => {
@@ -351,7 +727,12 @@ const calendar = (() => {
         i
       )}>
              <span class="calendar-date-txt">${lastMonthDate - i}</span>
-             <button class="item-add-btn" aria-label="${currentYear}년 ${currentMonth} 월 ${
+             <button class="item-add-btn" id="${convertDateToString(
+               currentYear,
+               currentMonth - 1,
+               i,
+               false
+             )}" aria-label="${currentYear}년 ${currentMonth} 월 ${
         lastMonthDate - i
       }일 아이템 추가"><span class="icon icon-add"></span></button>
              <ul class="items">
@@ -417,7 +798,12 @@ const calendar = (() => {
           ? `<span class="--hide">${currentYear}</span><span class="--hide">${currentMonth}</span>`
           : ''
       }</span>
-         <button class="item-add-btn" aria-label="${currentYear}년 ${currentMonth} 월 ${i}일 아이템 추가"><span class="icon icon-add"></span></button>
+         <button class="item-add-btn" id="${convertDateToString(
+           currentYear,
+           currentMonth,
+           i,
+           false
+         )}" aria-label="${currentYear}년 ${currentMonth} 월 ${i}일 아이템 추가"><span class="icon icon-add"></span></button>
          <ul class="items">
              ${data
                // eslint-disable-next-line no-loop-func
@@ -481,7 +867,12 @@ const calendar = (() => {
             }</span>`
           : ''
       }</span></span>
-         <button class="item-add-btn" aria-label="${currentYear}년 ${
+         <button class="item-add-btn" id="${convertDateToString(
+           currentYear,
+           currentMonth + 1,
+           i,
+           false
+         )}" aria-label="${currentYear}년 ${
         currentMonth + 1
       } 월 ${i}일 아이템 추가"><span class="icon icon-add"></span></button>
          <ul class="items">
@@ -547,7 +938,12 @@ const calendar = (() => {
           ? `<span class="--hide">${lastYear}</span><span class="--hide">${lastMonth}</span>`
           : ''
       }</span>
-           <button class="item-add-btn" aria-label="${lastYear}년 ${lastMonth} 월 ${
+           <button class="item-add-btn" id="${convertDateToString(
+             lastYear,
+             lastMonth,
+             i,
+             false
+           )}" aria-label="${lastYear}년 ${lastMonth} 월 ${
         i === 1 ? lastMonth + ',' + i : i
       }일 아이템 추가"><span class="icon icon-add"></span></button>
            <ul class="items">
@@ -571,7 +967,9 @@ const calendar = (() => {
                                    id="item${item.id}"
                                />
                                <span class="item-todo-chkicon"></span>
-                               <label class="item-todo-txt" for="item${item.id}">
+                               <label class="item-todo-txt" for="item${
+                                 item.id
+                               }">
                                    ${item.content}
                                </label>
                                ${itemControllerInHTML()}
@@ -613,9 +1011,12 @@ const calendar = (() => {
           : ''
       }</span>
            </span>
-           <button class="item-add-btn" aria-label="${lastYear}년 ${
-        lastMonth + 1
-      } 월 ${
+           <button class="item-add-btn" id="${convertDateToString(
+             lastYear,
+             lastMonth + 1,
+             i,
+             false
+           )}" aria-label="${lastYear}년 ${lastMonth + 1} 월 ${
         i === 1 ? (lastMonth >= 12 ? 0 : lastMonth) + 1 + '. ' + i : i
       }일 아이템 추가"><span class="icon icon-add"></span></button>
            <ul class="items">
@@ -639,7 +1040,9 @@ const calendar = (() => {
                                    id="item${item.id}"
                                />
                                <span class="item-todo-chkicon"></span>
-                               <label class="item-todo-txt" for="item${item.id}">
+                               <label class="item-todo-txt" for="item${
+                                 item.id
+                               }">
                                    ${item.content}
                                </label>
                                ${itemControllerInHTML()}
@@ -690,7 +1093,12 @@ const calendar = (() => {
           : ''
       }
            </span>
-           <button class="item-add-btn" aria-label="${firstYear}년 ${firstMonth} 월 ${
+           <button class="item-add-btn" id="${convertDateToString(
+             firstYear,
+             firstMonth - 1,
+             lastMonthDate - i,
+             false
+           )}" aria-label="${firstYear}년 ${firstMonth} 월 ${
         lastMonthDate - i === 1
           ? firstMonth + '.' + lastMonthDate - i
           : lastMonthDate - i
@@ -716,7 +1124,9 @@ const calendar = (() => {
                                    id="item${item.id}"
                                />
                                <span class="item-todo-chkicon"></span>
-                               <label class="item-todo-txt" for="item${item.id}">
+                               <label class="item-todo-txt" for="item${
+                                 item.id
+                               }">
                                    ${item.content}
                                </label>
                                ${itemControllerInHTML()}
@@ -755,7 +1165,12 @@ const calendar = (() => {
                : ''
            }</span>
            </span>
-           <button class="item-add-btn" aria-label="${firstYear}년 ${firstMonth} 월 ${
+           <button class="item-add-btn" id="${convertDateToString(
+             firstYear,
+             firstMonth,
+             i,
+             false
+           )}" aria-label="${firstYear}년 ${firstMonth} 월 ${
         i === 1 ? firstMonth + '.' + i : i
       }일 아이템 추가"><span class="icon icon-add"></span></button>
            <ul class="items">
@@ -902,6 +1317,8 @@ const calendar = (() => {
       $calendarYear.textContent = currentYear + '';
       $calendarMonth.textContent =
         currentMonth < 10 ? '0' + currentMonth : '' + currentMonth;
+      document.getElementById('mainCategoryBtn').textContent =
+        categoryUtil.getCategoryById(currentCategory).name;
     },
     changeToToday: todayPosition => {
       currentYear = year;
@@ -944,349 +1361,6 @@ const calendar = (() => {
   };
 })();
 
-// 카테고리
-const categoryUtil = (() => {
-  let nextId = 1;
-  let categories = [];
-
-  const $categoryMain = document.querySelector('#categoryMain .dropdown-menu');
-  const render = () => {
-    // 메인화면의 카테고리 변경
-    $categoryMain.innerHTML =
-      categories
-        .map(
-          category =>
-            `
-              <li
-                id="cateMain${category.id}"
-                class="dropdown-item dropdown-option-icon ${
-                  category.selected ? '--selected' : ''
-                }"
-                role="option"
-                data-cate-name="${category.name}"
-                data-cate-id=${category.id}
-              >
-                <input
-                  type="text"
-                  value="${category.name}"
-                  disabled
-                  class="dropdown-item-input"
-                />
-                <button class="category-delete-btn" aria-label="삭제">
-                  <span class="icon icon-delete-gray"></span>
-                </button>
-              </li>
-            `
-        )
-        .join('') +
-      `
-        <li class="dropdown-item dropdown-add">
-          <label for="newCategoryMain" class="a11y-hidden">새로운 카테고리명</label>
-          <input
-            type="text"
-            id="newCategoryMain"
-            class="category-add-input"
-            placeholder="카테고리명 입력"
-          />
-          <button class="category-add-btn" aria-label="추가">
-            <span class="icon icon-add-gray"></span>
-          </button>
-        </li>
-      `;
-
-    document.getElementById('newCategoryMain').addEventListener('keyup', e => {
-      if (e.key !== 'Enter') return;
-
-      const cateName = e.target.value.trim();
-      if (!cateName) return;
-      categoryUtil.add(cateName);
-      cateName.value = '';
-      document.getElementById('newCategoryMain').focus();
-    });
-
-    // 아이템추가창 카테고리 변경
-    document.querySelector('.modal-add .dropdown-category').innerHTML =
-      `
-      <span id="modalAddCategoryLabel" class="modal-input-label">카테고리 <span class="a11y-hidden">선택</span></span>
-      <button
-        type="button"
-        id="modalAddCategoryBtn"
-        class="dropdown-toggle"
-        name="itemCategory"
-        value="${categories[0].id}"
-        aria-labelledby="modalAddCategoryLabel modalAddCategoryBtn"
-        aria-haspopup="listbox"
-      >
-        ${categories[0].name}
-      </button>
-      <ul
-        class="dropdown-menu"
-        tabindex="-1"
-        role="listbox"
-        aria-labelledby="modalAddCategoryLabel"
-    >` +
-      categories
-        .map(
-          category =>
-            `
-              <li class="dropdown-item" role="option">
-                <button type="button" value="${category.id}" class="dropdown-option">
-                  ${category.name}
-                </button>
-              </li>
-            `
-        )
-        .join('') +
-      '</ul>';
-
-    // 아이템편집창 카테고리 변경
-    document.querySelector('.modal-edit .dropdown-category').innerHTML =
-      `
-      <span id="modalEditCategoryLabel" class="modal-input-label">카테고리 <span class="a11y-hidden">선택</span></span>
-      <button
-        type="button"
-        id="modalEditCategoryBtn"
-        class="dropdown-toggle --disabled"
-        name="itemCategory"
-        value="${categories[0].id}"
-        aria-labelledby="modalEditCategoryLabel modalEditCategoryBtn"
-        aria-haspopup="listbox"
-      >
-        ${categories[0].name}
-      </button>
-      <ul
-        class="dropdown-menu"
-        tabindex="-1"
-        role="listbox"
-        aria-labelledby="modalEditCategoryLabel"
-    >` +
-      categories
-        .map(
-          category =>
-            `
-              <li class="dropdown-item" role="option">
-                <button type="button" value="${category.id}" class="dropdown-option">
-                  ${category.name}
-                </button>
-              </li>
-            `
-        )
-        .join('') +
-      '</ul>';
-
-    const dropdownCategoryModalAdd = (() => {
-      const $dropdown = document.querySelector(
-        '#modalAddCategoryBtn + .dropdown-menu'
-      );
-      return {
-        toggle() {
-          $dropdown.classList.toggle('--show');
-        },
-        close() {
-          $dropdown.classList.remove('--show');
-        }
-      };
-    })();
-
-    const $modalAddCategoryBtn = document.getElementById('modalAddCategoryBtn');
-
-    document
-      .querySelector('.modal-add .dropdown-category')
-      .addEventListener('click', e => {
-        e.stopPropagation();
-
-        const $targetCategoryBtn = closest(
-          e.target,
-          'dropdown-toggle',
-          'dropdown-category'
-        );
-        const $modalAddCategoryOption = closest(
-          e.target,
-          'dropdown-option',
-          'dropdown-category'
-        );
-
-        if ($targetCategoryBtn) {
-          dropdownCategoryModalAdd.toggle();
-          return;
-        }
-
-        if ($modalAddCategoryOption) {
-          $modalAddCategoryBtn.textContent =
-            $modalAddCategoryOption.textContent.trim();
-          $modalAddCategoryBtn.value = $modalAddCategoryOption.value;
-          dropdownCategoryModalAdd.close();
-        }
-      });
-  };
-
-  return {
-    chkLength() {
-      return categories.length;
-    },
-    getSelectedName() {
-      return categories.filter(category => category.selected)[0].name;
-    },
-    getFirstCategory() {
-      return categories[0];
-    },
-    getCategoryById(id) {
-      return categories.filter(category => category.id === +id)[0];
-    },
-    fetch(data) {
-      categories = data;
-      nextId = data.length + 1;
-      render();
-    },
-    add(cateName) {
-      categories = [
-        ...categories,
-        {
-          id: nextId,
-          name: cateName,
-          selected: false
-        }
-      ];
-      nextId += 1;
-      render();
-    },
-    remove(cateId) {
-      let chgSelectedIdx = 0;
-      let removeSelected = false;
-
-      categories.forEach((category, idx, { length }) => {
-        if (category.id === cateId) {
-          if (category.selected) removeSelected = true;
-          chgSelectedIdx = idx === length - 1 ? idx - 1 : idx + 1;
-        }
-      });
-
-      categories = removeSelected
-        ? categories
-            .map((category, idx) => {
-              if (idx === chgSelectedIdx) {
-                return { ...category, selected: true };
-              }
-              return category;
-            })
-            .filter(category => category.id !== cateId)
-        : categories.filter(category => category.id !== cateId);
-      render();
-    },
-    select(cateId) {
-      categories = categories.map(category => {
-        if (category.id === cateId) {
-          return { ...category, selected: true };
-        }
-        if (category.selected) {
-          return { ...category, selected: false };
-        }
-        return category;
-      });
-      render();
-    }
-  };
-})();
-
-const dropdownCategoryMain = (() => {
-  const $dropdown = document.querySelector('#categoryMain .dropdown-menu');
-  return {
-    toggle() {
-      $dropdown.classList.toggle('--show');
-    },
-    close() {
-      $dropdown.classList.remove('--show');
-    }
-  };
-})();
-
-// 모달
-const modalAdd = (() => {
-  let isActive = false;
-
-  const $modal = document.querySelector('.modal-add');
-  const $modalDim = document.querySelector('.modal-dim');
-  const $titleYear = $modal.querySelector('.month');
-  const $titleMonth = $modal.querySelector('.date');
-  const $itemDate = $modal.querySelector('.modal-input-date');
-  const $itemContent = $modal.querySelector('.modal-input-txt');
-
-  return {
-    toggle(itemDate) {
-      isActive = !isActive;
-      $modal.classList.toggle('--show', isActive);
-      $modalDim.classList.toggle('--show', isActive);
-      document.body.classList.toggle('modal-open', isActive);
-
-      if (!isActive) return;
-      $titleYear.textContent = itemDate.slice(5, 7);
-      $titleMonth.textContent = itemDate.slice(8, 10);
-      $itemDate.value = itemDate;
-      $itemContent.focus();
-    },
-    close() {
-      isActive = false;
-      $modal.classList.remove('--show');
-      $modalDim.classList.remove('--show');
-      document.body.classList.remove('modal-open');
-    },
-    reset() {
-      const $itemCategoryBtn = $modal.querySelector('#modalAddCategoryBtn');
-      const $itemTypeBtn = $modal.querySelector('#modalAddTypeBtn');
-      $itemCategoryBtn.value = categoryUtil.getFirstCategory().id;
-      $itemCategoryBtn.textContent = categoryUtil.getFirstCategory().name;
-      $itemTypeBtn.value = ITEM_TYPE[0].id;
-      $itemTypeBtn.textContent = ITEM_TYPE[0].name;
-      $itemContent.value = '';
-    }
-  };
-})();
-
-const modalEdit = (() => {
-  let isActive = false;
-  const $modal = document.querySelector('.modal-edit');
-  const $modalDim = document.querySelector('.modal-dim');
-  const $titleYear = $modal.querySelector('.month');
-  const $titleMonth = $modal.querySelector('.date');
-  const $itemDate = $modal.querySelector('.modal-input-date');
-  const $itemContent = $modal.querySelector('.modal-input-txt');
-  const $itemId = $modal.querySelector('.modal-input-id');
-
-  return {
-    toggle({ id, date, category: categoryId, type: typeId, content }) {
-      isActive = !isActive;
-      $modal.classList.toggle('--show', isActive);
-      $modalDim.classList.toggle('--show', isActive);
-      document.body.classList.toggle('modal-open', isActive);
-
-      if (!isActive) return;
-      $itemId.value = id;
-      $titleYear.textContent = date.slice(5, 7);
-      $titleMonth.textContent = date.slice(8, 10);
-      $itemDate.value = date;
-      $itemContent.value = content;
-
-      const $categoryBtn = document.getElementById('modalEditCategoryBtn');
-      const $typeBtn = document.getElementById('modalEditTypeBtn');
-
-      $categoryBtn.value = categoryId;
-      $categoryBtn.textContent = categoryUtil.getCategoryById(categoryId).name;
-      $typeBtn.value = typeId;
-      $typeBtn.textContent = ITEM_TYPE.filter(
-        type => type.id === +typeId
-      )[0].name;
-
-      $itemContent.focus();
-    },
-    close() {
-      isActive = false;
-      $modal.classList.remove('--show');
-      $modalDim.classList.remove('--show');
-      document.body.classList.remove('modal-open');
-    }
-  };
-})();
-
 const addDataArray = ({ date, category, type, content }) => {
   data = [
     ...data,
@@ -1308,7 +1382,6 @@ const addDataDomTree = ({ date, type, content, category }) => {
   const $date = dates.find(item => item.dataset.date === date);
 
   const innerDate =
-  
     type === '1'
       ? `<li class="item item-todo" data-id=${nextDataId}>
              <input
@@ -1330,12 +1403,14 @@ const addDataDomTree = ({ date, type, content, category }) => {
              ${calendar.getItemControllerInHTML()}
          </li>`;
 
-  if(category === currentCategory) $date.lastElementChild.insertAdjacentHTML('beforeend', innerDate);
-  else{
-    currentCategory = category;
-    calendar.renderCalendarDateWithSavedDate();
+  if (category === currentCategory) {
+    $date.lastElementChild.insertAdjacentHTML('beforeend', innerDate);
+    return;
+  }
 
-  } 
+  currentCategory = category;
+  categoryUtil.select(+currentCategory);
+  calendar.renderCalendarDateWithSavedDate();
 };
 
 const deleteDataArray = itemId => {
@@ -1356,7 +1431,7 @@ const modifyDataArray = ({ id, date, content, order }) => {
   if (order) modifiedData.order = order;
 };
 
-const modifyDataDOM = ({ id, date, type, content }) => {
+const modifyDataDOM = ({ id, type, content }) => {
   const $modifyItem = document.getElementById(`item${id}`);
 
   if (type === '1') {
@@ -1463,6 +1538,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   $modalAddTypeBtn.addEventListener('click', e => {
     e.stopPropagation();
+    document
+      .querySelector('#modalAddCategoryBtn + .dropdown-menu')
+      .classList.remove('--show');
     dropdownTypeModalAdd.toggle();
   });
 
@@ -1479,7 +1557,7 @@ document.addEventListener('DOMContentLoaded', () => {
       dropdownTypeModalAdd.close();
     });
 
-  document.querySelector('.modal-add').addEventListener('click', () => {
+  $modalAdd.addEventListener('click', () => {
     [...document.querySelectorAll('.modal-add .dropdown-menu')].forEach(
       $dropdown => {
         $dropdown.classList.remove('--show');
@@ -1488,14 +1566,16 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.querySelector('.modal-dim').addEventListener('click', () => {
-    modalAdd.close();
-    modalAdd.reset();
-    modalEdit.close();
-    [...document.querySelectorAll('.modal-add .dropdown-menu')].forEach(
-      $dropdown => {
-        $dropdown.classList.remove('--show');
-      }
-    );
+    if (modalAdd.isActive()) {
+      [...document.querySelectorAll('.modal-add .dropdown-menu')].forEach(
+        $dropdown => {
+          $dropdown.classList.remove('--show');
+        }
+      );
+      modalAdd.reset();
+      modalAdd.close();
+    }
+    if (modalEdit.isActive()) modalEdit.close();
   });
 });
 
@@ -1563,14 +1643,14 @@ document
     modalEdit.close();
   });
 
-document.querySelector('.modal-add').addEventListener('submit', e => {
+$modalAdd.addEventListener('submit', e => {
   e.preventDefault();
 
   const newItem = {
-    date: e.currentTarget.itemDate.value,
-    category: e.currentTarget.itemCategory.value,
-    type: e.currentTarget.itemType.value,
-    content: e.currentTarget.itemContent.value
+    date: $modalAdd.itemDate.value,
+    category: $modalAdd.itemCategory.value,
+    type: $modalAdd.itemType.value,
+    content: $modalAdd.itemContent.value
   };
 
   addDataArray(newItem);
@@ -1581,7 +1661,7 @@ document.querySelector('.modal-add').addEventListener('submit', e => {
   modalAdd.reset();
 });
 
-document.querySelector('.modal-edit').addEventListener('submit', e => {
+$modalEdit.addEventListener('submit', e => {
   e.preventDefault();
 
   const editItem = {
@@ -1594,6 +1674,28 @@ document.querySelector('.modal-edit').addEventListener('submit', e => {
   modifyDataArray(editItem);
   modifyDataDOM(editItem);
   modalEdit.close();
+});
+
+$modalAdd.addEventListener('keydown', e => {
+  trapModalFocus(
+    e,
+    document.querySelector('.modal-add #modalAddCategoryBtn'),
+    document.querySelector('.modal-add .modal-close-btn')
+  );
+});
+
+$modalEdit.addEventListener('keydown', e => {
+  trapModalFocus(
+    e,
+    document.querySelector('.modal-edit #modalEditContent'),
+    document.querySelector('.modal-edit .modal-close-btn')
+  );
+});
+
+document.body.addEventListener('keyup', e => {
+  if (e.key !== 'Escape') return;
+  if (modalAdd.isActive()) modalAdd.close();
+  if (modalEdit.isActive()) modalEdit.close();
 });
 
 document.querySelector('.calendar-dates').addEventListener('click', e => {
@@ -1784,6 +1886,46 @@ $calendarDates.addEventListener('mousedown', e => {
   $calendarDates.addEventListener('mousemove', eventFunctions.mouseMoveEvent);
   $calendarDates.addEventListener('mouseover', eventFunctions.mouseOverEvent);
   document.addEventListener('mouseup', eventFunctions.mouseUpEvent);
+});
+
+$calendarDates.addEventListener('keyup', e => {
+  const key = e.key.replace('Arrow', '');
+  const { target } = e;
+  let nextDate;
+
+  if (
+    target.classList.contains('item-add-btn') &&
+    key.match(/Up|Down|Left|Right/)
+  ) {
+    const currYear = +target.id.slice(0, 4);
+    const currMonth = +target.id.slice(4, 6) - 1;
+    const currDate = +target.id.slice(6, 8);
+
+    switch (key) {
+      case 'Right':
+        nextDate = new Date(currYear, currMonth, currDate + 1);
+        break;
+      case 'Left':
+        nextDate = new Date(currYear, currMonth, currDate - 1);
+        break;
+      case 'Up':
+        nextDate = new Date(currYear, currMonth, currDate - 7);
+        break;
+      case 'Down':
+        nextDate = new Date(currYear, currMonth, currDate + 7);
+        break;
+      default:
+    }
+
+    nextDate = convertDateToString(
+      nextDate.getFullYear(),
+      nextDate.getMonth() + 1,
+      nextDate.getDate(),
+      false
+    );
+    e.preventDefault();
+    document.getElementById(nextDate).focus();
+  }
 });
 
 // 달력 코드

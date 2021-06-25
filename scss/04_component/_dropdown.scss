@@ -83,7 +83,7 @@
     white-space: nowrap;
     overflow: hidden;
 
-    &:disabled {
+    &:read-only {
       background: transparent;
       border: none;
       color: inherit;
