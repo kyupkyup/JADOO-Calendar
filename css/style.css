@@ -693,7 +693,7 @@ body.modal-open {
   padding: 0 40px 0 16px;
   width: 100%;
   height: 50px;
-  background: url("../../img/down.png") no-repeat 190px center/16px;
+  background: url("../img/down.png") no-repeat 190px center/16px;
   border-radius: 6px;
   border: 1px solid rgba(224, 226, 231, 0.75);
   line-height: 49px;
@@ -909,7 +909,7 @@ body.modal-open {
   background: #f8e6ed;
 }
 .item-add-btn:hover .icon-add {
-  background-image: url("../../img/plus-plum.png");
+  background-image: url("../img/plus-plum.png");
 }
 
 .item {
@@ -1170,7 +1170,7 @@ body {
   padding-top: 100px;
   width: 260px;
   height: 100vh;
-  background: url("../../img/jadoo-logoBig.png") no-repeat 130px 97%/40%;
+  background: url("../img/jadoo-logoBig.png") no-repeat 130px 97%/40%;
 }
 
 .nav-current {
