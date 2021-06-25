@@ -632,39 +632,39 @@ body.modal-open {
   margin: 2px;
   width: 36px;
   height: 36px;
-  background: url(../../img/plus.png) 50%/30% no-repeat;
+  background: url(../img/plus.png) 50%/30% no-repeat;
 }
 .icon-add-gray {
-  background: url(../../img/plus-gray.png) 50%/50% no-repeat;
+  background: url(../img/plus-gray.png) 50%/50% no-repeat;
 }
 .icon-control {
-  background: url(../../img/control.png) 50%/46% no-repeat #ffa0c4;
+  background: url(../img/control.png) 50%/46% no-repeat #ffa0c4;
   border-radius: 100%;
   box-shadow: 0 4px 9px 0 rgba(63, 65, 80, 0.1);
 }
 .icon-move {
-  background: url(../../img/move.png) 50%/46% no-repeat #fff;
+  background: url(../img/move.png) 50%/46% no-repeat #fff;
   border-radius: 100%;
 }
 .icon-edit {
-  background: url(../../img/edit.png) 50%/54% no-repeat #fff;
+  background: url(../img/edit.png) 50%/54% no-repeat #fff;
   border-radius: 100%;
 }
 .icon-edit-gray {
-  background: url(../../img/edit-gray.png) 50%/54% no-repeat #fff;
+  background: url(../img/edit-gray.png) 50%/54% no-repeat #fff;
 }
 .icon-delete {
-  background: url(../../img/delete.png) 50%/54% no-repeat #fff;
+  background: url(../img/delete.png) 50%/54% no-repeat #fff;
   border-radius: 100%;
 }
 .icon-delete-gray {
-  background: url(../../img/delete-gray.png) 50%/50% no-repeat;
+  background: url(../img/delete-gray.png) 50%/50% no-repeat;
 }
 .icon-delete-gray:hover {
-  background-image: url(../../img/delete.png);
+  background-image: url(../img/delete.png);
 }
 .icon-close {
-  background: url(../../img/close.png) 50%/40% no-repeat;
+  background: url(../img/close.png) 50%/40% no-repeat;
 }
 
 .round-btn {
