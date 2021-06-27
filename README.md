@@ -1,6 +1,6 @@
 # 🍒 자두 먼슬리 캘린더 (20210619 ~ 20210625)
 
-## [배포]()
+## [배포](https://hyunjungc-dev.github.io/JADOO-Calendar/)
 
 ## 팀 자두 구성 및 역할 분담
 + [조현정](https://github.com/HyunJungC-Dev) : 깃 관리, (JS) 각 요소의 drag and drop 기능 구현
