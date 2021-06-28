@@ -488,12 +488,11 @@ const categoryUtil = (() => {
 
       categories = removeSelected
         ? categories
-            .map((category, idx) => {
-              if (idx === chgSelectedIdx) {
-                return { ...category, selected: true };
-              }
-              return category;
-            })
+            .map((category, idx) =>
+              idx === chgSelectedIdx
+                ? { ...category, selected: true }
+                : category
+            )
             .filter(category => category.id !== cateId)
         : categories.filter(category => category.id !== cateId);
       render();
@@ -1516,7 +1515,7 @@ $calendarDates.addEventListener('keyup', e => {
       default:
     }
 
-    nextDate = convertDateToString(
+    nextDate = calendar.convertDateToString(
       nextDate.getFullYear(),
       nextDate.getMonth() + 1,
       nextDate.getDate(),
