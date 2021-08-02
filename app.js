@@ -645,31 +645,36 @@ const trapModalFocus = (e, $firstFocusElem, $lastFocusElem) => {
 
 // 달력
 
-
 const calendar = (() => {
   const $calendar = document.querySelector('.calendar');
   const $calendarGrid = document.querySelector('.calendar-dates');
   const $calendarYear = document.querySelector('.nav-year');
   const $calendarMonth = document.querySelector('.nav-month');
 
-  const year = new Date().getFullYear(); 
+  const year = new Date().getFullYear();
   const month = new Date().getMonth() + 1;
   const date = new Date().getDate();
   const dateObj = {
-    todayYear : year,
-    todayMonth : month,
-    firstYear : year, // 렌더링 된 가장 마지막 년
-    lastYear : year,
-    firstMonth : month, // 렌더링 된 가장 첫번째 년
-    lastMonth : month,
-    newCurMonth : month,
-    newCurYear : year,
-  }
-  // 
+    todayYear: year,
+    todayMonth: month,
+    firstYear: year, // 렌더링 된 가장 마지막 년
+    lastYear: year,
+    firstMonth: month, // 렌더링 된 가장 첫번째 년
+    lastMonth: month,
+    newCurMonth: month,
+    newCurYear: year
+  };
+  //
   const dayTranslate = day => (day === 0 ? 6 : day - 1);
-  const addMonth = (year, month) => [month + 1 > 12 ? year + 1 : year, month + 1 > 12 ? 1 : month + 1]; 
-  
-  const subtractMonth = (year, month) => [month - 1 < 1 ? year - 1 : year, month - 1 < 1 ? 12 : month - 1];
+  const addMonth = (year, month) => [
+    month + 1 > 12 ? year + 1 : year,
+    month + 1 > 12 ? 1 : month + 1
+  ];
+
+  const subtractMonth = (year, month) => [
+    month - 1 < 1 ? year - 1 : year,
+    month - 1 < 1 ? 12 : month - 1
+  ];
 
   const getCustomDate = (year, month) => {
     const firstDay = dayTranslate(new Date(year, month - 1).getDay());
@@ -679,17 +684,17 @@ const calendar = (() => {
     const lastMonthDate = new Date(year, month - 1, 0).getDate();
     return { firstDate, firstDay, lastDate, lastDay, lastMonthDate };
   };
-  
+
   const convertDateToString = (year, month, date, hasDash = true) => {
     const newYear = '' + year;
     const newMonth = month < 10 ? '0' + month : '' + month;
     const newDate = date < 10 ? '0' + date : '' + date;
-  
+
     if (hasDash) return newYear + '-' + newMonth + '-' + newDate;
     return newYear + newMonth + newDate;
   };
 
-  let $lastStandard = ''; 
+  let $lastStandard = '';
 
   const setYearMonth = (year, month) => {
     dateObj.firstYear = +year; // 렌더링 된 가장 마지막 년
@@ -714,30 +719,38 @@ const calendar = (() => {
        </button>
      </div>`;
 
-  const dateContentInHTML = (year, month, date, isToday = false) => 
-  `
-  <div class="calendar-date ${date % 7 === 0 ? 'standard' : ''} unactive ${isToday ? 'today': ''}" data-date=${convertDateToString(year,month,date)}>
-  <span class="calendar-date-txt">${date === 1 ? month + ". "+ date : date}
-  ${ date % 7 === 0
+  const dateContentInHTML = (year, month, date, isToday = false) =>
+    `
+  <div class="calendar-date ${date % 7 === 0 ? 'standard' : ''} unactive ${
+      isToday ? 'today' : ''
+    }" data-date=${convertDateToString(year, month, date)}>
+  <span class="calendar-date-txt">${date === 1 ? month + '. ' + date : date}
+  ${
+    date % 7 === 0
       ? `<span class="--hide">${year}</span><span class="--hide">${month}</span>`
-      : ''}
+      : ''
+  }
   </span>
-  <button class="item-add-btn" id="${convertDateToString(year,month,date,false)}" aria-label="${year}년 ${month}월 ${date}일 아이템 추가"><span class="icon icon-add"></span></button>
+  <button class="item-add-btn" id="${convertDateToString(
+    year,
+    month,
+    date,
+    false
+  )}" aria-label="${year}년 ${month}월 ${date}일 아이템 추가"><span class="icon icon-add"></span></button>
   <ul class="items">
   ${data
     // eslint-disable-next-line no-loop-func
     .filter(item => item.category === currentCategory)
     .filter(
       // eslint-disable-next-line no-loop-func
-      item =>
-        item.date ===
-        convertDateToString(year, month, date)
+      item => item.date === convertDateToString(year, month, date)
     )
     .reduce(
       // eslint-disable-next-line no-loop-func
       (acc, item) =>
         acc +
-        (item.type === '1'? `<li class="item item-todo" data-id=${item.id}>
+        (item.type === '1'
+          ? `<li class="item item-todo" data-id=${item.id}>
                   <input
                       class="item-todo-chkbox"
                       type="checkbox"
@@ -764,7 +777,7 @@ const calendar = (() => {
   </div>
 `;
 
-// 오늘을 기준 달 렌더링
+  // 오늘을 기준 달 렌더링
   const initCalendar = () => {
     const { firstDay, lastDate, lastDay, lastMonthDate } = getCustomDate(
       dateObj.todayYear,
@@ -773,42 +786,70 @@ const calendar = (() => {
     let newDateInHTML = '';
     // 전달 날짜와 현재달 날짜가 같은 주에 있는 부분 렌더링
     for (let i = firstDay - 1; i >= 0; i -= 1) {
-      newDateInHTML += dateContentInHTML(dateObj.todayYear, dateObj.todayMonth - 1, lastMonthDate - i, year === dateObj.todayYear && month === dateObj.todayMonth && date === i)
+      newDateInHTML += dateContentInHTML(
+        dateObj.todayYear,
+        dateObj.todayMonth - 1,
+        lastMonthDate - i,
+        year === dateObj.todayYear && month === dateObj.todayMonth && date === i
+      );
     }
     // 현재 달 날짜 렌더링
     for (let i = 1; i <= lastDate; i += 1) {
-      newDateInHTML += dateContentInHTML(dateObj.todayYear, dateObj.todayMonth, i, year === dateObj.todayYear && month === dateObj.todayMonth && date === i)
+      newDateInHTML += dateContentInHTML(
+        dateObj.todayYear,
+        dateObj.todayMonth,
+        i,
+        year === dateObj.todayYear && month === dateObj.todayMonth && date === i
+      );
     }
     // 다음달 날짜와 현재달 날짜가 같은 주에 있는 부분 렌더링
     for (let i = 1; i <= 6 - lastDay; i += 1) {
-      newDateInHTML += dateContentInHTML(dateObj.todayMonth + 1 > 12 ? dateObj.todayYear + 1 : dateObj.todayYear, 
+      newDateInHTML += dateContentInHTML(
+        dateObj.todayMonth + 1 > 12 ? dateObj.todayYear + 1 : dateObj.todayYear,
         dateObj.todayMonth + 1 > 12 ? 1 : dateObj.todayMonth + 1,
-         i,
-          year === dateObj.todayYear && month === dateObj.todayMonth && date === i)
-
+        i,
+        year === dateObj.todayYear && month === dateObj.todayMonth && date === i
+      );
     }
     $calendarGrid.innerHTML = newDateInHTML;
   };
 
   const changeNextMonth = () => {
-    [dateObj.lastYear, dateObj.lastMonth] = addMonth(dateObj.lastYear, dateObj.lastMonth);
-    const { firstDay, lastDate, lastDay } = getCustomDate(dateObj.lastYear, dateObj.lastMonth);
+    [dateObj.lastYear, dateObj.lastMonth] = addMonth(
+      dateObj.lastYear,
+      dateObj.lastMonth
+    );
+    const { firstDay, lastDate, lastDay } = getCustomDate(
+      dateObj.lastYear,
+      dateObj.lastMonth
+    );
     let newDateInHTML = '';
 
     // 다음 달 날짜 렌더링
     for (let i = 8 - firstDay === 8 ? 1 : 8 - firstDay; i <= lastDate; i += 1) {
-      newDateInHTML += dateContentInHTML(dateObj.lastYear, dateObj.lastMonth, i)
+      newDateInHTML += dateContentInHTML(
+        dateObj.lastYear,
+        dateObj.lastMonth,
+        i
+      );
     }
 
     // 다음달 날짜와 다다음달 날짜가 같은 주에 있는 부분 렌더링
     for (let i = 1; i <= 6 - lastDay; i += 1) {
-      newDateInHTML += dateContentInHTML(dateObj.lastMonth + 1 > 12 ? dateObj.lastYear + 1: dateObj.lastYear , dateObj.lastMonth + 1 > 12 ? 1 : dateObj.lastMonth + 1, i)
+      newDateInHTML += dateContentInHTML(
+        dateObj.lastMonth + 1 > 12 ? dateObj.lastYear + 1 : dateObj.lastYear,
+        dateObj.lastMonth + 1 > 12 ? 1 : dateObj.lastMonth + 1,
+        i
+      );
     }
     $calendarGrid.insertAdjacentHTML('beforeend', newDateInHTML);
   };
 
   const changePrevMonth = () => {
-    [dateObj.firstYear, dateObj.firstMonth] = subtractMonth(dateObj.firstYear, dateObj.firstMonth);
+    [dateObj.firstYear, dateObj.firstMonth] = subtractMonth(
+      dateObj.firstYear,
+      dateObj.firstMonth
+    );
     const { firstDay, lastDate, lastDay, lastMonthDate } = getCustomDate(
       dateObj.firstYear,
       dateObj.firstMonth
@@ -816,13 +857,23 @@ const calendar = (() => {
     let newDateInHTML = '';
     // 전달 날짜와 전전달 날짜가 같은 주에 있는 부분 렌더링
     for (let i = firstDay - 1; i >= 0; i -= 1) {
-      newDateInHTML += dateContentInHTML(dateObj.firstMonth - 1 < 1 ? dateObj.firstYear - 1 : dateObj.firstYear, 
-        dateObj.firstMonth - 1 < 1 ? 12 : dateObj.firstMonth - 1, 
-        lastMonthDate - i)
+      newDateInHTML += dateContentInHTML(
+        dateObj.firstMonth - 1 < 1 ? dateObj.firstYear - 1 : dateObj.firstYear,
+        dateObj.firstMonth - 1 < 1 ? 12 : dateObj.firstMonth - 1,
+        lastMonthDate - i
+      );
     }
     // 전달 렌더링
-    for (let i = 1; i <= lastDate - (lastDay === 6 ? -1 : lastDay) - 1; i += 1) {
-      newDateInHTML += dateContentInHTML(dateObj.firstYear, dateObj.firstMonth, i)
+    for (
+      let i = 1;
+      i <= lastDate - (lastDay === 6 ? -1 : lastDay) - 1;
+      i += 1
+    ) {
+      newDateInHTML += dateContentInHTML(
+        dateObj.firstYear,
+        dateObj.firstMonth,
+        i
+      );
     }
     $calendarGrid.insertAdjacentHTML('afterbegin', newDateInHTML);
   };
@@ -861,12 +912,17 @@ const calendar = (() => {
       entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            const allUnActiveElements = document.querySelectorAll('.calendar-date');
+            const allUnActiveElements =
+              document.querySelectorAll('.calendar-date');
             allUnActiveElements.forEach(item => item.classList.add('unactive'));
-            [$calendarYear.textContent, $calendarMonth.textContent] =entry.target.dataset.date.split('-');
-            const { firstDate, lastDate } = getCustomDate( +$calendarYear.textContent, +$calendarMonth.textContent);
+            [$calendarYear.textContent, $calendarMonth.textContent] =
+              entry.target.dataset.date.split('-');
+            const { firstDate, lastDate } = getCustomDate(
+              +$calendarYear.textContent,
+              +$calendarMonth.textContent
+            );
             $lastStandard = entry.target;
-            setYearMonth( $calendarYear.textContent, $calendarMonth.textContent);
+            setYearMonth($calendarYear.textContent, $calendarMonth.textContent);
             const [, , standardDate] = entry.target.dataset.date.split('-');
             let node = entry.target;
             for (let date = 1; date < firstDate + +standardDate; date += 1) {
@@ -917,8 +973,12 @@ const calendar = (() => {
         $lastStandard.getBoundingClientRect().top + $calendar.clientHeight * 1.4
       );
       $calendarYear.textContent = dateObj.todayYear + '';
-      $calendarMonth.textContent = dateObj.todayMonth < 10 ? '0' + dateObj.todayMonth : '' + dateObj.todayMonth;
-      document.getElementById('mainCategoryBtn').textContent = categoryUtil.getCategoryById(currentCategory).name;
+      $calendarMonth.textContent =
+        dateObj.todayMonth < 10
+          ? '0' + dateObj.todayMonth
+          : '' + dateObj.todayMonth;
+      document.getElementById('mainCategoryBtn').textContent =
+        categoryUtil.getCategoryById(currentCategory).name;
     },
     changeToToday: todayPosition => {
       dateObj.todayYear = year;
@@ -947,7 +1007,8 @@ const calendar = (() => {
           });
         }
         if (
-          $calendar.scrollHeight - Math.ceil($calendar.scrollTop) <= $calendar.clientHeight
+          $calendar.scrollHeight - Math.ceil($calendar.scrollTop) <=
+          $calendar.clientHeight
         ) {
           changeNextMonth();
           const $standards = document.querySelectorAll('.standard');
@@ -1386,7 +1447,7 @@ $calendarDates.addEventListener('mousedown', e => {
         if (!$container) return;
 
         $nextElement = e.target.closest('li');
-        if (draggable === $nextElement) return;
+
         if ($nextElement) {
           $nextElement.style['border-top'] = 'solid 5px gray';
           $prevNextElement = $nextElement;
@@ -1407,21 +1468,22 @@ $calendarDates.addEventListener('mousedown', e => {
         const $prevElement = draggable.previousElementSibling;
         if ($lastElement === draggable && $prevElement) {
           $prevElement.style['border-bottom'] = 'solid 5px gray';
-          $prevContainer = $prevElement;
-          return;
-        }
-
-        // 이동할 위치에 현재 이동중인 자신의 일정이 있는데
-        // 그게 이동할 위치의 마지막이 아닌 경우
-        if ($lastElement !== draggable) {
-          $lastElement.style['border-bottom'] = 'solid 5px gray';
-          $prevContainer = $lastElement;
+          $prevNextElement = $prevElement;
           return;
         }
 
         // 이동할 위치에 현재 이동중인 자신의 일정만 있는 경우
-        $container.style['border-top'] = 'solid 5px gray';
-        $prevContainer = $container;
+        if ($lastElement === draggable) {
+          $container.style['border-top'] = 'solid 5px gray';
+          $prevContainer = $container;
+        }
+
+        // 이동할 위치에 현재 이동중인 자신의 일정이 있는데
+        // 그게 이동할 위치의 마지막이 아니고 들어가려고 하는 위치는 마지막인 경우
+        if ($lastElement !== draggable) {
+          $lastElement.style['border-bottom'] = 'solid 5px gray';
+          $prevNextElement = $lastElement;
+        }
       },
       mouseUpEvent() {
         draggable.classList.remove('dragging');

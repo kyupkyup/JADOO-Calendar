@@ -1038,7 +1038,6 @@ body.modal-open {
   opacity: 0.5;
   z-index: 1;
   border-radius: 20px;
-  pointer-events: none;
 }
 .dragging > .item-util {
   display: flex;
