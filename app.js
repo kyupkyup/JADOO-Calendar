@@ -893,6 +893,7 @@ const calendar = (() => {
   })();
 
   return {
+    convertDateToString,
     renderCalendar: () => {
       initCalendar();
       changeNextMonth();
