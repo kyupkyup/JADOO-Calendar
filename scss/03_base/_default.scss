@@ -1,7 +1,7 @@
 // 기본 스타일 -------------------------------------------------------------------- /
 // 루트 요소의 기본 글자 크기 및 가로 스크바 제거 ----------------------------------------------- /
 html {
-  font-size: $rootUnit;
+  // font-size: $rootUnit;
   overflow-y: visible;
 }
 
@@ -22,8 +22,11 @@ body *::after {
 
 // 본문 기본 폰트, 글자 크기, 굵기, 배경 색상 지정 --------------------------------------------- /
 body {
-  font-family: 'Spoqa Han Sans', 'Sans-serif';
+  min-width: $breakpoint;
+  font-family: 'Noto Sans KR', 'Sans-serif';
   font-size: inherit;
+  color: $black;
+  word-break: break-all;
 }
 
 // 제목 글자 크기 및 굵기 재지정 --------------------------------------------------------- /
@@ -60,5 +63,34 @@ button {
   padding: 0;
   background-color: transparent;
   border: 0;
+  font-weight: 500;
   cursor: pointer;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: 'Noto Sans KR', 'Sans-serif';
+  line-height: 1.4;
+}
+
+input {
+  padding: 0 8px;
+  vertical-align: top;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+body.modal-open {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.--hide {
+  display: none;
 }
