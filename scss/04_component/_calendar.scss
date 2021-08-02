@@ -1,7 +1,3 @@
-.unactive{
-  background-color: gray;
-  opacity: 0.5;
-}
 .calendar {
   max-height: 100vh;
   overflow-y: auto;
@@ -58,8 +54,7 @@
     min-height: 160px;
 
     &.unactive {
-      background-color: $lightGray;
-      opacity: 0.8;
+      background-color: $transGray3;
     }
 
     &.today {

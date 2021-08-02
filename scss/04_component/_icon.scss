@@ -7,46 +7,49 @@
   font-size: 1.1rem;
 
   &-add {
-    background: url(../../img/plus.png) 50%/30% no-repeat;
+    margin: 2px;
+    width: 36px;
+    height: 36px;
+    background: url(../img/plus.png) 50%/30% no-repeat;
   }
 
   &-add-gray {
-    background: url(../../img/plus-gray.png) 50%/50% no-repeat;
+    background: url(../img/plus-gray.png) 50%/50% no-repeat;
   }
 
   &-control {
-    background: url(../../img/control.png) 50%/46% no-repeat $primaryPink;
+    background: url(../img/control.png) 50%/46% no-repeat $primaryPink;
     border-radius: 100%;
     box-shadow: $boxShadow;
   }
 
   &-move {
-    background: url(../../img/move.png) 50%/46% no-repeat $white;
+    background: url(../img/move.png) 50%/46% no-repeat $white;
     border-radius: 100%;
   }
 
   &-edit {
-    background: url(../../img/edit.png) 50%/54% no-repeat $white;
+    background: url(../img/edit.png) 50%/54% no-repeat $white;
     border-radius: 100%;
   }
 
   &-edit-gray {
-    background: url(../../img/edit-gray.png) 50%/54% no-repeat $white;
+    background: url(../img/edit-gray.png) 50%/54% no-repeat $white;
   }
 
   &-delete {
-    background: url(../../img/delete.png) 50%/54% no-repeat $white;
+    background: url(../img/delete.png) 50%/54% no-repeat $white;
     border-radius: 100%;
   }
 
   &-delete-gray {
-    background: url(../../img/delete-gray.png) 50%/50% no-repeat;
+    background: url(../img/delete-gray.png) 50%/50% no-repeat;
     &:hover {
-      background-image: url(../../img/delete.png);
+      background-image: url(../img/delete.png);
     }
   }
 
   &-close {
-    background: url(../../img/close.png) 50%/40% no-repeat;
+    background: url(../img/close.png) 50%/40% no-repeat;
   }
 }

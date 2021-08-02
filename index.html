@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="패스트캠퍼스 네카라쿠배 교육과정1기 프로젝트. 내 일정을 카테고리별 먼슬리로 한번에 관리할 수 있는 자두캘린더."
+    />
     <title>자두 캘린더</title>
     <link rel=" shortcut icon" href="./img/favicon.ico" />
     <link rel="icon" href="./img/favicon.ico" />
@@ -25,7 +29,9 @@
         <button class="round-btn move-today-btn">오늘</button>
       </div>
       <div id="categoryMain" class="dropdown dropdown-category">
-        <span id="categoryMainLabel" class="a11y-hidden">카테고리 선택</span>
+        <span id="categoryMainLabel"
+          >카테고리 <span class="a11y-hidden">선택</span></span
+        >
         <button
           type="button"
           id="mainCategoryBtn"
@@ -40,8 +46,8 @@
           tabindex="-1"
           role="listbox"
           aria-labelledby="categoryMainLabel"
-          aria-activedescendant="cateMain001"
         ></ul>
+        <!-- aria-activedescendant="cateMain001" -->
       </div>
     </nav>
     <main class="calendar">
@@ -66,12 +72,13 @@
         <div class="dropdown dropdown-category modal-input"></div>
         <div class="dropdown dropdown-type modal-input"></div>
         <div class="modal-input">
-          <label for="itemContent" class="modal-input-label">내용</label>
+          <label for="modalAddContent" class="modal-input-label">내용</label>
           <textarea
             required
             placeholder="내용을 입력해주세요"
             class="modal-input-txt"
             name="itemContent"
+            id="modalAddContent"
           ></textarea>
         </div>
         <button class="round-btn modal-submit-btn" type="submit">확인</button>
@@ -91,12 +98,13 @@
         <div class="dropdown dropdown-category modal-input"></div>
         <div class="dropdown dropdown-type modal-input"></div>
         <div class="modal-input">
-          <label for="itemContent" class="modal-input-label">내용</label>
+          <label for="modalEditContent" class="modal-input-label">내용</label>
           <textarea
             required
             placeholder="내용을 입력해주세요"
             class="modal-input-txt"
             name="itemContent"
+            id="modalEditContent"
           ></textarea>
         </div>
         <button class="round-btn modal-submit-btn" type="submit">확인</button>
@@ -107,7 +115,5 @@
     </form>
     <div class="modal-dim"></div>
     <script src="./app.js"></script>
-    <script src="./prac1.js"></script>
-    <script src="./dragAndDropFunction.js"></script>
   </body>
 </html>

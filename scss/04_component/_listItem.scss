@@ -7,6 +7,16 @@
   position: absolute;
   top: 0px;
   right: 0px;
+  margin: 2px;
+  border-radius: 100%;
+  transition: background 0.2s;
+  &:hover {
+    background: $primaryLightPink2;
+  }
+
+  &:hover .icon-add {
+    background-image: url('../img/plus-plum.png');
+  }
 }
 
 .item {
@@ -37,6 +47,10 @@
     top: 50%;
     right: 6px;
     transform: translateY(-50%);
+
+    &:focus {
+      opacity: 1;
+    }
   }
 
   &-util {
@@ -120,6 +134,12 @@
     background-image: url(../img/checked.png);
   }
 
+  &-chkbox:focus + .item-todo-chkicon {
+    outline: 0;
+    border-radius: 2px;
+    box-shadow: 0 0 0 2px rgba($primaryPlum, 1);
+  }
+
   &-txt {
     display: block;
     padding-left: 34px;
@@ -151,7 +171,6 @@
   opacity: 0.5;
   z-index: 1;
   border-radius: 20px;
-  pointer-events: none;
   > .item-util {
     display: flex;
     flex-direction: column;
