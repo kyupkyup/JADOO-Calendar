@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="패스트캠퍼스 네카라쿠배 교육과정1기 프로젝트. 내 일정을 카테고리별 먼슬리로 한번에 관리할 수 있는 자두캘린더."
+    />
+    <title>자두 캘린더</title>
+    <link rel=" shortcut icon" href="./img/favicon.ico" />
+    <link rel="icon" href="./img/favicon.ico" />
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <h1 class="a11y-hidden">자두캘린더</h1>
+    <nav class="navigation">
+      <h2 class="nav-current">
+        <span class="nav-year">2021</span>
+        <span class="a11y-hidden">년</span>
+        <span class="nav-month">07</span>
+        <span class="a11y-hidden">월</span>
+      </h2>
+      <div class="nav-move">
+        <!-- <button id="dropdownCalendarLabel" class="round-btn move-calendar-btn">
+          년월선택
+        </button> -->
+        <button class="round-btn move-today-btn">오늘</button>
+      </div>
+      <div id="categoryMain" class="dropdown dropdown-category">
+        <span id="categoryMainLabel"
+          >카테고리 <span class="a11y-hidden">선택</span></span
+        >
+        <button
+          type="button"
+          id="mainCategoryBtn"
+          class="dropdown-toggle"
+          aria-labelledby="categoryMainLabel mainCategoryBtn"
+          aria-haspopup="listbox"
+        >
+          ✍ 네카라쿠배
+        </button>
+        <ul
+          class="dropdown-menu"
+          tabindex="-1"
+          role="listbox"
+          aria-labelledby="categoryMainLabel"
+        ></ul>
+        <!-- aria-activedescendant="cateMain001" -->
+      </div>
+    </nav>
+    <main class="calendar">
+      <div class="calendar-weekday">
+        <div class="calendar-day">mon</div>
+        <div class="calendar-day">tue</div>
+        <div class="calendar-day">wed</div>
+        <div class="calendar-day">thu</div>
+        <div class="calendar-day">fri</div>
+        <div class="calendar-day">sat</div>
+        <div class="calendar-day">sun</div>
+      </div>
+      <div class="calendar-dates"></div>
+    </main>
+    <form class="modal modal-add">
+      <fieldset>
+        <legend class="modal-title">
+          <span class="month">10</span>월 <span class="date">30</span>일 아이템
+          추가 <span class="a11y-hidden">폼</span>
+        </legend>
+        <input type="hidden" name="itemDate" class="modal-input-date" />
+        <div class="dropdown dropdown-category modal-input"></div>
+        <div class="dropdown dropdown-type modal-input"></div>
+        <div class="modal-input">
+          <label for="modalAddContent" class="modal-input-label">내용</label>
+          <textarea
+            required
+            placeholder="내용을 입력해주세요"
+            class="modal-input-txt"
+            name="itemContent"
+            id="modalAddContent"
+          ></textarea>
+        </div>
+        <button class="round-btn modal-submit-btn" type="submit">확인</button>
+        <button class="modal-close-btn" type="button" aria-label="닫기">
+          <span class="icon icon-close"></span>
+        </button>
+      </fieldset>
+    </form>
+    <form class="modal modal-edit">
+      <fieldset>
+        <legend class="modal-title">
+          <span class="month">10</span>월 <span class="date">30</span>일 아이템
+          수정 <span class="a11y-hidden">폼</span>
+        </legend>
+        <input type="hidden" name="itemDate" class="modal-input-date" />
+        <input type="hidden" name="itemId" class="modal-input-id" />
+        <div class="dropdown dropdown-category modal-input"></div>
+        <div class="dropdown dropdown-type modal-input"></div>
+        <div class="modal-input">
+          <label for="modalEditContent" class="modal-input-label">내용</label>
+          <textarea
+            required
+            placeholder="내용을 입력해주세요"
+            class="modal-input-txt"
+            name="itemContent"
+            id="modalEditContent"
+          ></textarea>
+        </div>
+        <button class="round-btn modal-submit-btn" type="submit">확인</button>
+        <button class="modal-close-btn" type="button" aria-label="닫기">
+          <span class="icon icon-close"></span>
+        </button>
+      </fieldset>
+    </form>
+    <div class="modal-dim"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>
