@@ -2,7 +2,6 @@
 
 ## [배포](https://hyunjungc-dev.github.io/JADOO-Calendar/)
 ![jadoo-main](https://user-images.githubusercontent.com/81357083/126862719-876f1739-6ec3-441c-9922-4f0bc53b4767.JPG)
->>>>>>> 3c1e2396119096959b92e61b77b642065042ffe8
 
 ✅ 카테고리별 일상을 기록·관리할 수 있는 캘린더   
 ✅ 스크롤에 따라 원하는 날짜를 연속적으로 탐색할 수 있는 캘린더 
