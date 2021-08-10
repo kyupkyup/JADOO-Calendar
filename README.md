@@ -1,8 +1,6 @@
 # 🍒 자두 먼슬리 캘린더 (20210619 ~ 20210625)
 
-<<<<<<< HEAD
 ## [배포](https://hyunjungc-dev.github.io/JADOO-Calendar/)
-=======
 ![jadoo-main](https://user-images.githubusercontent.com/81357083/126862719-876f1739-6ec3-441c-9922-4f0bc53b4767.JPG)
 >>>>>>> 3c1e2396119096959b92e61b77b642065042ffe8
 
